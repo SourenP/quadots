@@ -18,7 +18,7 @@ Space::Space(int screen_w, int screen_h, int fps)
     SCREEN_WIDTH = screen_w;
     SCREEN_HEIGHT = screen_h;
     SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &window, &renderer);
-    screenSurface = SDL_GetWindowSurface(window);
+    backRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
     if (window == nullptr) {
         logSDLError(cout, "CreateWindow");
         SDL_Quit();
@@ -93,7 +93,6 @@ void Space::CreateDot(int x, int y, int8_t r, int8_t g, int8_t b, pair<float, fl
 
 void Space::DrawBackground() {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_Rect backRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
     SDL_RenderFillRect(renderer, &backRect);
 }
 

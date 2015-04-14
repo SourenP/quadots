@@ -19,7 +19,7 @@ class Space
 		int SCREEN_HEIGHT;
 		SDL_Window *window;
 		SDL_Renderer *renderer;
-		SDL_Surface* screenSurface;
+		SDL_Rect backRect;
 
 		struct Dot;
 		vector<Dot> dots;
