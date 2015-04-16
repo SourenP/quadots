@@ -8,6 +8,25 @@ Points on the 2D space are called *dots* and have an x/y coordinate, a velocity,
 
 The library provides functions to get information about dots and manipulate their behavior based on that.
 
+### Uses
+**Boids:**
+
+Dots that follow simple these simple rules to simulate a flcoking behavior of birds:
+* separation: steer to avoid crowding local flockmates
+* alignment: steer towards the average heading of local flockmates
+* cohesion: steer to move toward the average position (center of mass) of local flockmates
+
+**Safari**
+
+A group of animal types that interact with one another. For example:
+* Jaguar: eats antelopes and lingers.
+* Antelope: avoids jaguars and eats grass.
+* Grass: gets eaten.
+
+**Data Processing**
+
+* Not sure yet
+
 ### Implementation
 **Dot:**
 ```
@@ -32,4 +51,13 @@ vector<Dot>         get_dots()
 vector<Dot>         get_dots(int type)
 vector<Dot>         get_neighbors(Dot d, int N)
 float               get_distance(Dot d, Dot d)
+vector<Dot>         on_collision(Type t1, Type t2, float threshold, func(t1,t2))
 ```
+
+**Quadtrees**
+
+A significant data structure for our library that we are going to implement ourselves.
+
+Used for:
+* get_neighbors
+* on_collision
