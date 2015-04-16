@@ -35,6 +35,9 @@ int                 y_coordinate
 float               velocity
 pair<float,float>   direction
 int                 type
+int8_t              r
+int8_t              g
+int8_t              b
 ```
 
 **Space:**
@@ -46,6 +49,7 @@ Dot                 set_coord(Dot d, int x, int y)
 Dot                 set_vel(Dot d, float vel)
 Dot                 set_dir(Dot d, pair<float, float> dir)
 Dot                 set_type(int t)
+Dot                 set_color(int8_t r, int8_t g, int8_t b)
 
 vector<Dot>         get_dots()
 vector<Dot>         get_dots(int type)
@@ -61,3 +65,9 @@ A significant data structure for our library that we are going to implement ours
 Used for:
 * get_neighbors
 * on_collision
+* 
+
+### Measurements
+* How efficent it is to manipulate dots.
+* Compare boids complexity with other boids implementation.
+* Compare our quadtree implementation runtime with other quadtree libraries.
