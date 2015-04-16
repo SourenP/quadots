@@ -6,12 +6,7 @@ Quadots is a C++ library of for making 2D simulations of a set of points. More s
 
 Points on the 2D space are called *dots* and have an x/y coordinate, a velocity, a direction and a type. The significance of the a type of dot is up to the user to define.
 
-The library provides functions to define the behavior of dots movement such as:
-* get/set dot velocity
-* get/set dot direction
-* get/set dot type
-* get N nearest neighbors
-* get distance from another dot
+The library provides functions to get information about dots and manipulate their behavior based on that.
 
 ### Implementation
 **Dot:**
