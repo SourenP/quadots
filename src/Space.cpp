@@ -12,7 +12,7 @@ struct Space::Dot {
     float vel;
 };
 
-Space::Space(int screen_w, int screen_h, int fps)
+Space::Space(int screen_w, int screen_h, int32_t fps)
 {
     // Create Window
     SCREEN_WIDTH = screen_w;
@@ -23,20 +23,17 @@ Space::Space(int screen_w, int screen_h, int fps)
         logSDLError(cout, "CreateWindow");
         SDL_Quit();
     }
-
-    InitDots();
-    SpaceLoop(fps);
+    FPS = fps;
+    running = false;
 }
 
-void Space::InitDots() {
-    CreateDot(200, 200, 0, 0, 0, make_pair(1,1), 2);
-    CreateDot(200, 200, 0, 0, 0, make_pair(-1,-1), 2);
-    CreateDot(200, 200, 0, 0, 0, make_pair(1,-1), 2);
-    CreateDot(200, 200, 0, 0, 0, make_pair(-1,1), 2);
+void Space::run() {
+    if (!running)
+        SpaceLoop(FPS);
 }
 
-void Space::SpaceLoop(int fps)
-{  
+void Space::SpaceLoop(int32_t fps) {
+    running = true;
     //Our event structure
     SDL_Event e;
     bool quit = false;
@@ -54,7 +51,7 @@ void Space::SpaceLoop(int fps)
         DrawDots();
 
         SDL_RenderPresent(renderer);
-        SDL_Delay(1000/fps);
+        SDL_Delay(1000/fps); // crashes if negative fps
     }
 }
 
