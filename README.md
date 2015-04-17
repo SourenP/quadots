@@ -47,7 +47,7 @@ int8_t              a
 typedef shared_ptr<Dot> Dot_p;
 
 Dot_p               CreateDot(params)
-Dot_p               RemoveDot(Dot_p d)
+void                RemoveDot(Dot_p d)
 
 vector<Dot_p>       get_dots()
 vector<Dot_p>       get_dots(int type)
