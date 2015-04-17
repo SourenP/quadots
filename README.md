@@ -28,34 +28,32 @@ A group of animal types that interact with one another. For example:
 * Not sure yet
 
 ### Implementation
+
 **Dot:**
 ```
-int                 x_coordinate
-int                 y_coordinate
+float               x
+float               y
 float               velocity
 pair<float,float>   direction
 int                 type
 int8_t              r
 int8_t              g
 int8_t              b
+int8_t              a
 ```
 
 **Space:**
 ```
-bool                add_dot(Dot d)
-bool                remove_dot(Dot d)
+typedef shared_ptr<Dot> Dot_p;
 
-Dot                 set_coord(Dot d, int x, int y)
-Dot                 set_vel(Dot d, float vel)
-Dot                 set_dir(Dot d, pair<float, float> dir)
-Dot                 set_type(int t)
-Dot                 set_color(int8_t r, int8_t g, int8_t b)
+Dot_p               CreateDot(params)
+Dot_p               RemoveDot(Dot_p d)
 
-vector<Dot>         get_dots()
-vector<Dot>         get_dots(int type)
-vector<Dot>         get_neighbors(Dot d, int N)
-float               get_distance(Dot d, Dot d)
-vector<Dot>         on_collision(Type t1, Type t2, float threshold, func(t1,t2))
+vector<Dot_p>       get_dots()
+vector<Dot_p>       get_dots(int type)
+vector<Dot_p>       get_neighbors(Dot_p d, int N)
+float               get_distance(Dot_p d, Dot_p d)
+vector<Dot_p>       on_collision(Type t1, Type t2, float threshold, func(t1,t2))
 ```
 
 **Quadtrees**
