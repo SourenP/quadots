@@ -6,34 +6,50 @@
 #include <iostream>
 #include <cstdint>
 #include <vector>
+#include <memory>
 #include <SDL2/SDL.h>
 using namespace std;
 
 class Space
 {
-	public:
-		Space(int screen_w, int screen_h, int fps);
-		~Space();
+    public:
+        struct Dot {
+            float x;
+            float y;
+            int8_t r;
+            int8_t g;
+            int8_t b;
+            int8_t a;
+            pair<float, float> dir;
+            float vel;
+            int type;
+        };
+        typedef shared_ptr<Dot> Dot_p;
 
-		void CreateDot(int x, int y, int8_t r, int8_t g, int8_t b, pair<float, float> dir, float vel);
-		void run();
-	private:
-		int SCREEN_WIDTH;
-		int SCREEN_HEIGHT;
-		SDL_Window *window;
-		SDL_Renderer *renderer;
-		SDL_Rect backRect;
+        Space(int screen_w, int screen_h, int fps);
+        ~Space();
 
-		int FPS;
-		bool running;
-		struct Dot;
-		vector<Dot> dots;
+        Dot_p CreateDot(float x, float y, int r, int g, int b, pair<float, float> dir, float vel, int type);
+        bool Step();
+        float get_distance(const Dot_p a,const Dot_p b);
+    private:
 
-		void UpdateDots();
-		void DrawDots();
-		void DrawBackground();
-		void logSDLError(ostream &os, const string &msg);
-		void SpaceLoop(int fps);
+        int SCREEN_WIDTH;
+        int SCREEN_HEIGHT;
+        SDL_Window *window;
+        SDL_Renderer *renderer;
+        SDL_Rect backRect;
+
+        int FPS;
+        bool quit;
+        SDL_Event sdl_e;
+
+        vector<Dot_p> dots;
+
+        void UpdateDots();
+        void DrawDots();
+        void DrawBackground();
+        void logSDLError(ostream &os, const string &msg);
 };
 
 #endif
