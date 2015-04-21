@@ -8,7 +8,29 @@ Points on the 2D space are called *dots* and have an x/y coordinate, a velocity,
 
 The library provides functions to get information about dots and manipulate their behavior based on that.
 
-### Uses
+### Use
+The simulation has a Step function which is executed at a speed defined by the user.
+The Step function takes a set of (target, action) pairs and executes the action on the each of the dots in target.
+A target is a list of dots. This can be a discrete set of dots, a type or all dots.
+An action is a function that takes a dot as an argument and manipulates it.
+
+For example this simple program will simulate two black dots rotating in circles.
+```
+Space *s = new Space(400, 400, 12);
+array<int8_t,4> black = {0,0,0,255};
+
+auto dot1 = s->CreateDot(200, 200, black, 0, 1, 1);
+auto dot2 = s->CreateDot(200, 200, black, 180, 1, 1);
+
+vector<Dot_p> dots = {dot1, dot2};
+void rotate(Dot_p d) {
+  d.ang += 2;
+}
+
+s->Run( ({dot1, dot2}, rotate) );
+```
+
+### Examples
 **Boids:**
 
 Dots that follow simple these simple rules to simulate a flcoking behavior of birds:
@@ -33,7 +55,7 @@ A group of animal types that interact with one another. For example:
 ```
 float               x
 float               y
-array<int8_t,4>		color
+array<int8_t,4>		  color
 float               ang
 float               vel
 int                 type
@@ -42,6 +64,8 @@ int                 type
 **Space:**
 ```
 typedef shared_ptr<Dot> Dot_p;
+
+void                Run(int sps, (target, action), ... );
 
 Dot_p               CreateDot(float x, float y, array<int8_t,4> color, float ang, float vel, int type)
 void                RemoveDot(Dot_p d)
