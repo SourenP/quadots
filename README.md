@@ -10,8 +10,11 @@ The library provides functions to get information about dots and manipulate thei
 
 ### Use
 The simulation has a Step function which is executed at a speed defined by the user.
-The Step function takes a set of (target, action) pairs and executes the action on the each of the dots in target.
+The Step function takes a set of (target, action) pairs and for each pair executes the action on the each of the dots in the target.
+Where:
+
 A target is a list of dots. This can be a discrete set of dots, a type or all dots.
+
 An action is a function that takes a dot as an argument and manipulates it.
 
 For example this simple program will simulate two black dots rotating in circles.
