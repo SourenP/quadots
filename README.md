@@ -33,20 +33,17 @@ A group of animal types that interact with one another. For example:
 ```
 float               x
 float               y
-float               velocity
-pair<float,float>   direction
+array<int8_t,4>		color
+float               ang
+float               vel
 int                 type
-int8_t              r
-int8_t              g
-int8_t              b
-int8_t              a
 ```
 
 **Space:**
 ```
 typedef shared_ptr<Dot> Dot_p;
 
-Dot_p               CreateDot(params)
+Dot_p               CreateDot(float x, float y, array<int8_t,4> color, float ang, float vel, int type)
 void                RemoveDot(Dot_p d)
 
 vector<Dot_p>       get_dots()

@@ -53,16 +53,9 @@ bool Space::Step() {
 */
 void Space::UpdateDots() {
     for (Dot_p d : dots) {
-        // Get unit direction
-        float dir_l = sqrt(d->dir.first*d->dir.first + d->dir.second*d->dir.second);
-        d->dir.first = d->dir.first/dir_l;
-        d->dir.second = d->dir.second/dir_l;
-
-        // Update location based on direction and velocity
-        d->x += d->dir.first  * d->vel;
-        d->y += d->dir.second * d->vel;
-
-        //cout << d->type << ": " << d->vel << endl;
+        // Update location based on angle and velocity
+        d->x += cos(d->ang * PI/180.0) * d->vel;
+        d->y += sin(d->ang * PI/180.0) * d->vel;
     }
 }
 
@@ -72,7 +65,7 @@ void Space::UpdateDots() {
 void Space::DrawDots() {
     for (Dot_p d : dots) {
         // note: deal with out of bounds x/y later
-        SDL_SetRenderDrawColor(renderer, d->r, d->g, d->b, d->a);
+        SDL_SetRenderDrawColor(renderer, d->color[0], d->color[1], d->color[2], d->color[3]);
         SDL_RenderDrawPoint(renderer, d->x, d->y);
     }
 }
@@ -80,14 +73,12 @@ void Space::DrawDots() {
 /*
     Creates a new dot and returns a smart pointer to it.
 */
-Space::Dot_p Space::CreateDot(float x, float y, int r, int g, int b, pair<float, float> dir, float vel, int type) {
+Space::Dot_p Space::CreateDot(float x, float y, array<int8_t,4> color, float ang, float vel, int type) {
     Dot_p new_dot(new Dot());
     new_dot->x = x;
     new_dot->y = y;
-    new_dot->r = r;
-    new_dot->g = g;
-    new_dot->a = 255;
-    new_dot->dir = dir;
+    new_dot->color = color;
+    new_dot->ang = ang;
     new_dot->vel = vel;
     new_dot->type = type;
     dots.push_back(new_dot);

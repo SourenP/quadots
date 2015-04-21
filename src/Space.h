@@ -1,5 +1,6 @@
 #ifndef SPACE_H
 #define SPACE_H
+#define PI 3.14159265
 
 #include <stdio.h>
 #include <math.h>
@@ -16,20 +17,18 @@ class Space
         struct Dot {
             float x;
             float y;
-            int8_t r;
-            int8_t g;
-            int8_t b;
-            int8_t a;
-            pair<float, float> dir;
+            array<int8_t,4> color;
+            float ang;
             float vel;
             int type;
         };
+        
         typedef shared_ptr<Dot> Dot_p;
 
         Space(int screen_w, int screen_h, int fps);
         ~Space();
 
-        Dot_p CreateDot(float x, float y, int r, int g, int b, pair<float, float> dir, float vel, int type);
+        Dot_p CreateDot(float x, float y, array<int8_t,4> color, float ang, float vel, int type);
         bool Step();
         float get_distance(const Dot_p a,const Dot_p b);
     private:
