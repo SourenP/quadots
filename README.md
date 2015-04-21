@@ -24,7 +24,7 @@ auto dot2 = s->CreateDot(200, 200, black, 180, 1, 1);
 
 vector<Dot_p> dots = {dot1, dot2};
 void rotate(Dot_p d) {
-  d.ang += 2;
+  d->ang += 2;
 }
 
 s->Run( ({dot1, dot2}, rotate) );
@@ -33,7 +33,7 @@ s->Run( ({dot1, dot2}, rotate) );
 ### Examples
 **Boids:**
 
-Dots that follow simple these simple rules to simulate a flcoking behavior of birds:
+Dots that follow simple these simple rules to simulate a flocking behavior of birds:
 * separation: steer to avoid crowding local flockmates
 * alignment: steer towards the average heading of local flockmates
 * cohesion: steer to move toward the average position (center of mass) of local flockmates
@@ -55,7 +55,7 @@ A group of animal types that interact with one another. For example:
 ```
 float               x
 float               y
-array<int8_t,4>		  color
+array<int8_t,4>		color
 float               ang
 float               vel
 int                 type
@@ -65,7 +65,7 @@ int                 type
 ```
 typedef shared_ptr<Dot> Dot_p;
 
-void                Run(int sps, (target, action), ... );
+void                Run(pair<vector<Dot_p>, func(Dot_p)>(target, action), ... );
 
 Dot_p               CreateDot(float x, float y, array<int8_t,4> color, float ang, float vel, int type)
 void                RemoveDot(Dot_p d)

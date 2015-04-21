@@ -25,7 +25,7 @@ class Space
         
         typedef shared_ptr<Dot> Dot_p;
 
-        Space(int screen_w, int screen_h, int fps);
+        Space(int screen_w, int screen_h, int sps);
         ~Space();
 
         Dot_p CreateDot(float x, float y, array<int8_t,4> color, float ang, float vel, int type);
@@ -39,7 +39,7 @@ class Space
         SDL_Renderer *renderer;
         SDL_Rect backRect;
 
-        int FPS;
+        int SPS;
         bool quit;
         SDL_Event sdl_e;
 

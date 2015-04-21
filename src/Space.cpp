@@ -1,7 +1,7 @@
 #include "Space.h"
 using namespace std;
 
-Space::Space(int screen_w, int screen_h, int32_t fps)
+Space::Space(int screen_w, int screen_h, int32_t sps)
 {
     // Create SDL Window
     SCREEN_WIDTH = screen_w;
@@ -18,7 +18,7 @@ Space::Space(int screen_w, int screen_h, int32_t fps)
     }
 
     // Initialize variables.
-    FPS = fps;
+    SPS = sps;
     quit = false;
 }
 
@@ -42,7 +42,7 @@ bool Space::Step() {
         DrawDots();
 
         SDL_RenderPresent(renderer);
-        SDL_Delay(1000/FPS); // crashes if negative fps
+        SDL_Delay(1000/SPS); // crashes if negative sps
     }
     return quit;
 }
