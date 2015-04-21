@@ -13,7 +13,7 @@ int main()
 
     // Initialize dots
     auto dot1 = s->CreateDot(200, 200, black, 0+45, 1, 1);
-    auto dot2 = s->CreateDot(200, 200, red, 90+45, 1, 2);
+    auto dot2 = s->CreateDot(200, 200, {255,0,0,255}, 90+45, 1, 2);
     auto dot3 = s->CreateDot(200, 200, black, 180+45, 1, 3);
     auto dot4 = s->CreateDot(200, 200, red, 275+45, 1, 4);
 
