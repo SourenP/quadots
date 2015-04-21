@@ -26,8 +26,8 @@ Space::Space(int screen_w, int screen_h, int32_t sps)
     Updates and redraws dots.
     Returns true if window was closed.
 */
-bool Space::Step() {
-    if (!quit) {
+void Space::Run(vector<pair<target, action>> tas) {
+    while (!quit) {
         while (SDL_PollEvent(&sdl_e)) {
             if (sdl_e.type == SDL_QUIT){
                 quit = true;
@@ -37,6 +37,11 @@ bool Space::Step() {
         SDL_RenderClear(renderer);
         DrawBackground();
 
+        // Call actions on targets
+        for (pair<target, action> ta : tas)
+            for (Dot_p d : ta.first)
+                ta.second(d);
+
         // Update and draw
         UpdateDots();
         DrawDots();
@@ -44,7 +49,6 @@ bool Space::Step() {
         SDL_RenderPresent(renderer);
         SDL_Delay(1000/SPS); // crashes if negative sps
     }
-    return quit;
 }
 
 

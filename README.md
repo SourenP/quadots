@@ -19,19 +19,35 @@ An action is a function that takes a dot as an argument and manipulates it.
 
 For example this simple program will simulate two black dots rotating in circles.
 ```
-Space *s = new Space(400, 400, 12);
-array<int8_t,4> black = {0,0,0,255};
-
-auto dot1 = s->CreateDot(200, 200, black, 0, 1, 1);
-auto dot2 = s->CreateDot(200, 200, black, 180, 1, 1);
-
-vector<Dot_p> dots = {dot1, dot2};
-void rotate(Dot_p d) {
-  d->ang += 2;
+void rotate(Space::Dot_p d) {
+    d->ang += 2;
 }
 
-s->Run( ({dot1, dot2}, rotate) );
+int main()
+{
+    // Initialize space
+    Space *s = new Space(400, 400, 24);
+
+    // Create black r = 0, g = 0, b = 0, a = 255
+    array<int8_t,4> black = {0, 0, 0, 255};
+
+    // Create two dots in the middle of the screen facing opposite directions
+    auto dot1 = s->CreateDot(200, 200, black, 0, 1, 1);
+    auto dot2 = s->CreateDot(200, 200, black, 180, 1, 1);
+
+    // Create target and action
+    Space::target dots = {dot1, dot2};
+    Space::action rot = &rotate;
+
+    // Run the simulation
+    s->Run({make_pair(dots, rot)});
+
+    delete s;
+    return 0;
+}
 ```
+
+Additional Feature: target is dynamic.
 
 ### Examples
 **Boids:**
@@ -67,17 +83,18 @@ int                 type
 **Space:**
 ```
 typedef shared_ptr<Dot> Dot_p;
+typedef vector<Dot_p> target;
+typedef void (*action)(Dot_p);
 
-void                Run(pair<vector<Dot_p>, func(Dot_p)>(target, action), ... );
+Space(int screen_w, int screen_h, int sps);
 
-Dot_p               CreateDot(float x, float y, array<int8_t,4> color, float ang, float vel, int type)
-void                RemoveDot(Dot_p d)
+Dot_p CreateDot(float x, float y, array<int8_t,4> color, float ang, float vel, int type);
+void Run(vector<pair<target, action>> tas);
+float get_distance(const Dot_p a,const Dot_p b);
 
 vector<Dot_p>       get_dots()
 vector<Dot_p>       get_dots(int type)
 vector<Dot_p>       get_neighbors(Dot_p d, int N)
-float               get_distance(Dot_p d, Dot_p d)
-vector<Dot_p>       on_collision(Type t1, Type t2, float threshold, func(t1,t2))
 ```
 
 **Quadtrees**

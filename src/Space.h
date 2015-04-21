@@ -24,15 +24,17 @@ class Space
         };
         
         typedef shared_ptr<Dot> Dot_p;
+        typedef vector<Dot_p> target;
+        typedef void (*action)(Dot_p);
 
         Space(int screen_w, int screen_h, int sps);
         ~Space();
 
         Dot_p CreateDot(float x, float y, array<int8_t,4> color, float ang, float vel, int type);
-        bool Step();
+        void Run(vector<pair<target, action>> tas);
         float get_distance(const Dot_p a,const Dot_p b);
-    private:
 
+    private:
         int SCREEN_WIDTH;
         int SCREEN_HEIGHT;
         SDL_Window *window;
