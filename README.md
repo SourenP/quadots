@@ -47,6 +47,8 @@ int main()
 }
 ```
 
+There is a probem: you can't really call getNeighbors(d) in rotate. Going to ask David.
+
 Additional Feature: target is dynamic.
 
 ### Examples
@@ -83,18 +85,18 @@ int                 type
 **Space:**
 ```
 typedef shared_ptr<Dot> Dot_p;
-typedef vector<Dot_p> target;
+typedef vector<Dot_p>   target;
 typedef void (*action)(Dot_p);
 
 Space(int screen_w, int screen_h, int sps);
 
-Dot_p CreateDot(float x, float y, array<int8_t,4> color, float ang, float vel, int type);
-void Run(vector<pair<target, action>> tas);
-float get_distance(const Dot_p a,const Dot_p b);
+Dot_p           CreateDot(float x, float y, array<int8_t,4> color, float ang, float vel, int type);
+void            Run(vector<pair<target, action>> tas);
+float           get_distance(const Dot_p a,const Dot_p b);
 
-vector<Dot_p>       get_dots()
-vector<Dot_p>       get_dots(int type)
-vector<Dot_p>       get_neighbors(Dot_p d, int N)
+vector<Dot_p>   get_dots()
+vector<Dot_p>   get_dots(int type)
+vector<Dot_p>   get_neighbors(Dot_p d, int N)
 ```
 
 **Quadtrees**
