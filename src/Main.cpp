@@ -14,7 +14,7 @@ int main()
     auto Point1 = s->CreatePoint(200, 200, 0, 1);
     auto Point2 = s->CreatePoint(200, 200, 180, 1);
 
-    s->Run(100);
+    s->Run(100, twodee);
 
     delete s;
     return 0;
