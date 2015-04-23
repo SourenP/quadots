@@ -10,13 +10,13 @@ LDFLAGS = -g
 LDLIBS  = -L../include -lSDL2
 
 executables = Main
-objects = Main.o Simulation.o Point.o State.o
+objects = Main.o Simulation.o Point.o State.o Renderer.o
 
 .PHONY: default
 default: $(executables)
 
-$(executables): Main.o Simulation.o Point.o State.o
-$(objects): Simulation.h Point.h State.h
+$(executables): Main.o Simulation.o Point.o State.o Renderer.o
+$(objects): Simulation.h Point.h State.h Renderer.h
 
 .PHONY: clean
 clean:
