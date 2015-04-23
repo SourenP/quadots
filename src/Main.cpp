@@ -1,29 +1,20 @@
 #include <iostream>
-#include "Space.h"
+#include "Simulation.h"
 using namespace std;
-
-void rotate(Space::Dot_p d) {
-    d->ang += 2;
-}
 
 int main()
 {
-    // Initialize space
-    Space *s = new Space(400, 400, 24);
+    // Initialize Renderer
+    Renderer twodee = Renderer(400,400, 24);
 
-    // Create black r = 0, g = 0, b = 0, a = 255
-    array<int8_t,4> black = {0, 0, 0, 255};
+    // Initialize Simulation
+    Simulation *s = new Simulation();
 
-    // Create two dots in the middle of the screen facing opposite directions
-    auto dot1 = s->CreateDot(200, 200, black, 0, 1, 1);
-    auto dot2 = s->CreateDot(200, 200, black, 180, 1, 1);
+    // Create two Points in the middle of the screen facing opposite directions
+    s->CreatePoint(200, 200, 0, 1);
+    s->CreatePoint(200, 200, 180, 1);
 
-    // Create target and action
-    Space::target dots = {dot1, dot2};
-    Space::action rot = &rotate;
-
-    // Run the simulation
-    s->Run({make_pair(dots, rot)});
+    s->Run(100, twodee);
 
     delete s;
     return 0;
