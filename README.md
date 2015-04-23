@@ -4,48 +4,113 @@
 ### Description
 Quadots is a C++ library of for making 2D simulations of a set of points. More specifically, the movement of these points based on some logic the user defines.
 
-Points on the 2D space are called *dots* and have an x/y coordinate, a velocity, a direction and a type. The significance of the a type of dot is up to the user to define.
+Points have x/y coordinates, a velocity, a direction and a behavior. The significance of the behavior of dot is up to the user to define.
 
-The library provides functions to get information about dots and manipulate their behavior based on that.
+The library provides various functions that help construct behaviors, such as the neigherst neighbors of a point or the average direction of all points.
 
 ### Use
-The simulation has a Step function which is executed at a speed defined by the user.
-The Step function takes a set of (target, action) pairs and for each pair executes the action on the each of the dots in the target.
-Where:
+The user first creates a Simulation object to which he/she can add Points with behaviors.
 
-A target is a list of dots. This can be a discrete set of dots, a type or all dots.
+The first step is to define a rule (since a behavior is a set of rules a point follows).
 
-An action is a function that takes a dot as an argument and manipulates it.
+A rule is a function that takes a pointer to a point and a control object.
+For example:
 
-For example this simple program will simulate two black dots rotating in circles.
 ```
-void rotate(Space::Dot_p d) {
-    d->ang += 2;
+void rotate(Point::Point_p p, Control& c) {
+    p->ang += 2;
 }
+
+// Simulation defines the type rule
+Simulation::rule rot = &rotate;
+```
+
+This rule simply adds 2 degrees to the angle of a point.
+
+We can also use the control function to depend the behavior of our point on other point. For example:
+
+
+```
+void rotate(Point::Point_p p, Control& c) {
+    p->ang = c.avg_ang();
+}
+
+auto rot = &rotate;
+```
+
+But this is a more boring behavior, so we'll stick to our first one.
+
+A behavior is a vector of rules. So we can construct a behavior with our single rule rotate like so:
+
+```
+Simulation::rule rot = &rotate;
+Simulation::behavior circle = {rot};
+```
+
+Once we have our behavior, we need to create a Simulation to then add that behavior to it.
+
+```
+// Initialize Simulation
+Simulation *s = new Simulation();
+
+// Create behavior circle
+int b = s->CreateBehavior(circle);
+```
+
+When a behavior is added to the Simulation, an index is returned. This index is then passed to a point to which you want to assign that behavior.
+
+So let's make our points!
+
+```
+// Create two Points in the middle of the screen facing opposite directions
+s->CreatePoint(200, 200, 0, 1, b);
+s->CreatePoint(200, 200, 180, 2, b);
+``` 
+
+Now all that's left is to run the simulation. But since we want to see our points visually lets define a renderer which we'll pass in.
+
+```
+// Initialize Renderer
+Renderer twodee = Renderer(400,400, 32);
+
+// Run Simulation for 0 (infinite) steps
+s->Run(0, twodee);
+```
+
+Here is our full code:
+```
+void rotate(Point::Point_p p, Control& c) {
+    p->ang += 2;
+}
+
 
 int main()
 {
-    // Initialize space
-    Space *s = new Space(400, 400, 24);
+    // Brains
+    Simulation::rule rot = &rotate;
+    Simulation::behavior circle = {rot};
 
-    // Create black r = 0, g = 0, b = 0, a = 255
-    array<int8_t,4> black = {0, 0, 0, 255};
+    // Initialize Simulation
+    Simulation *s = new Simulation();
 
-    // Create two dots in the middle of the screen facing opposite directions
-    auto dot1 = s->CreateDot(200, 200, black, 0, 1, 1);
-    auto dot2 = s->CreateDot(200, 200, black, 180, 1, 1);
+    // Create behavior circle
+    int b = s->CreateBehavior(circle);
 
-    // Create target and action
-    Space::target dots = {dot1, dot2};
-    Space::action rot = &rotate;
+    // Create two Points in the middle of the screen facing opposite directions
+    s->CreatePoint(200, 200, 0, 1, b);
+    s->CreatePoint(200, 200, 180, 2, b);
 
-    // Run the simulation
-    s->Run({make_pair(dots, rot)});
+    // Initialize Renderer
+    Renderer twodee = Renderer(400,400, 32);
+
+    // Run Simulation for 200 steps
+    s->Run(200, twodee);
 
     delete s;
     return 0;
 }
 ```
+
 
 There is a probem: you can't really call getNeighbors(d) in rotate. Going to ask David.
 
@@ -60,7 +125,7 @@ Dots that follow simple these simple rules to simulate a flocking behavior of bi
 * cohesion: steer to move toward the average position (center of mass) of local flockmates
 
 **Safari**
-
+/
 A group of animal types that interact with one another. For example:
 * Jaguar: eats antelopes and lingers.
 * Antelope: avoids jaguars and eats grass.
