@@ -6,50 +6,42 @@ Quadots is a C++ library of for making 2D simulations of a set of points. More s
 
 Points have x/y coordinates, a velocity, a direction and a behavior. The significance of the behavior of dot is up to the user to define.
 
-The library provides various functions that help construct behaviors, such as the neigherst neighbors of a point or the average direction of all points.
+The library provides various functions that help construct behaviors, such as the nearest neighbors of a point or the average direction of all points.
 
 ### Use
-The user first creates a Simulation object to which he/she can add Points with behaviors.
 
-The first step is to define a rule (since a behavior is a set of rules a point follows).
+Let's simulate two points rotating in circles.
 
-A rule is a function that takes a pointer to a point and a control object.
+The first step is to define a the rule which will change the direction of a point by a little each step.
+By applying this rule every step to a point, the point will rotate in a circle.
+
+A rule is a function that takes as parameters a pointer to a Point and a Control.
+
+Don't worry about what the Control does for now.
+
 For example:
 
-```
+```c++
 void rotate(Point::Point_p p, Control& c) {
     p->ang += 2;
 }
 
-// Simulation defines the type rule
 Simulation::rule rot = &rotate;
 ```
 
-This rule simply adds 2 degrees to the angle of a point.
+Our rule is the ```rot``` object.
 
-We can also use the control function to depend the behavior of our point on other point. For example:
+You don't assign a rule to a point, instead you assign a behavior, which is a set of rules it will follow.
 
+So we can construct a behavior with our single rule rot like so:
 
-```
-void rotate(Point::Point_p p, Control& c) {
-    p->ang = c.avg_ang();
-}
-
-auto rot = &rotate;
-```
-
-But this is a more boring behavior, so we'll stick to our first one.
-
-A behavior is a vector of rules. So we can construct a behavior with our single rule rotate like so:
-
-```
-Simulation::rule rot = &rotate;
+```c++
 Simulation::behavior circle = {rot};
 ```
 
-Once we have our behavior, we need to create a Simulation to then add that behavior to it.
+Once we have our behavior, we can now create our simulation and add the behavior ```cirlce``` to it:
 
-```
+```c++
 // Initialize Simulation
 Simulation *s = new Simulation();
 
@@ -57,19 +49,29 @@ Simulation *s = new Simulation();
 int b = s->CreateBehavior(circle);
 ```
 
-When a behavior is added to the Simulation, an index is returned. This index is then passed to a point to which you want to assign that behavior.
+When a behavior is added to the Simulation, an index is returned. You pass this index to any point you want to have that behavior. So we save this "behavior index" in ```b```.
 
-So let's make our points!
+Now we're ready to make our points!
 
-```
+They will both have positions x = 200, y = 200.
+
+The first point will be facing at an angle = 0 and the other 180. So back to back.
+
+The first has a velocity = 1 and the other 2. So that the second draws a bigger circle.
+
+And finally, we'll give them both the same behavior index ```b```.
+
+```c++
 // Create two Points in the middle of the screen facing opposite directions
 s->CreatePoint(200, 200, 0, 1, b);
 s->CreatePoint(200, 200, 180, 2, b);
 ``` 
 
-Now all that's left is to run the simulation. But since we want to see our points visually lets define a renderer which we'll pass in.
+Now all that's left is to run the simulation. But since we want to see our points visually lets define a renderer to run the simulation with.
 
-```
+The renderer will be a window of size 400/400 and will run at 32 steps per second.
+
+```c++
 // Initialize Renderer
 Renderer twodee = Renderer(400,400, 32);
 
@@ -77,8 +79,8 @@ Renderer twodee = Renderer(400,400, 32);
 s->Run(0, twodee);
 ```
 
-Here is our full code:
-```
+**Here is our full code:**
+```c++
 void rotate(Point::Point_p p, Control& c) {
     p->ang += 2;
 }
@@ -111,11 +113,6 @@ int main()
 }
 ```
 
-
-There is a probem: you can't really call getNeighbors(d) in rotate. Going to ask David.
-
-Additional Feature: target is dynamic.
-
 ### Examples
 **Boids:**
 
@@ -137,40 +134,14 @@ A group of animal types that interact with one another. For example:
 
 ### Implementation
 
-**Dot:**
-```
-float               x
-float               y
-array<int8_t,4>		color
-float               ang
-float               vel
-int                 type
-```
-
-**Space:**
-```
-typedef shared_ptr<Dot> Dot_p;
-typedef vector<Dot_p>   target;
-typedef void (*action)(Dot_p);
-
-Space(int screen_w, int screen_h, int sps);
-
-Dot_p           CreateDot(float x, float y, array<int8_t,4> color, float ang, float vel, int type);
-void            Run(vector<pair<target, action>> tas);
-float           get_distance(const Dot_p a,const Dot_p b);
-
-vector<Dot_p>   get_dots()
-vector<Dot_p>   get_dots(int type)
-vector<Dot_p>   get_neighbors(Dot_p d, int N)
-```
-
 **Quadtrees**
 
 A significant data structure for our library that we are going to implement ourselves.
 
 Used for:
-* get_neighbors
-* on_collision
+* Get nearest neighbors
+* Get points in area (either square or circle)
+* Detect collision of two points based on some distance scalar.
 * 
 
 ### Measurements
