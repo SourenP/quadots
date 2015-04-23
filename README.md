@@ -134,40 +134,14 @@ A group of animal types that interact with one another. For example:
 
 ### Implementation
 
-**Dot:**
-```
-float               x
-float               y
-array<int8_t,4>		color
-float               ang
-float               vel
-int                 type
-```
-
-**Space:**
-```
-typedef shared_ptr<Dot> Dot_p;
-typedef vector<Dot_p>   target;
-typedef void (*action)(Dot_p);
-
-Space(int screen_w, int screen_h, int sps);
-
-Dot_p           CreateDot(float x, float y, array<int8_t,4> color, float ang, float vel, int type);
-void            Run(vector<pair<target, action>> tas);
-float           get_distance(const Dot_p a,const Dot_p b);
-
-vector<Dot_p>   get_dots()
-vector<Dot_p>   get_dots(int type)
-vector<Dot_p>   get_neighbors(Dot_p d, int N)
-```
-
 **Quadtrees**
 
 A significant data structure for our library that we are going to implement ourselves.
 
 Used for:
-* get_neighbors
-* on_collision
+* Get nearest neighbors
+* Get points in area (either square or circle)
+* Detect collision of two points based on some distance scalar.
 * 
 
 ### Measurements
