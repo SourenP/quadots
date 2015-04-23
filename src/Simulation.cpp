@@ -1,7 +1,9 @@
 #include "Simulation.h"
 using namespace std;
 
-Simulation::Simulation() {};
+Simulation::Simulation() {
+    control = new Control(&curr_state);
+}
 
 /*
     Updates and prints Points @gen_count times.
@@ -44,19 +46,30 @@ void Simulation::Run(int gen_count, Renderer &r) {
     Calculates new position of Points.
 */
 void Simulation::UpdateState() {
-    for (Point::Point_p d : curr_state.points) {
-        // Update location based on angle and velocity
-        d->x += cos(d->ang * PI/180.0) * d->vel;
-        d->y += sin(d->ang * PI/180.0) * d->vel;
+    for (Point::Point_p p : curr_state.points) {
+        for (rule r : behaviors[p->bindex])
+            r(p, *control);
+        Move(p);
     }
+}
+
+void Simulation::Move(Point::Point_p p) {
+    // Update location based on angle and velocity
+    p->x += cos(p->ang * PI/180.0) * p->vel;
+    p->y += sin(p->ang * PI/180.0) * p->vel;
 }
 
 /*
     Creates a new Point and returns a smart pointer to it.
 */
-void Simulation::CreatePoint(float x, float y, float ang, float vel) {
-    Point::Point_p new_point(new Point(x, y, ang, vel));
+void Simulation::CreatePoint(float x, float y, float ang, float vel, int b) {
+    Point::Point_p new_point(new Point(x, y, ang, vel, b));
     curr_state.points.push_back(new_point);
+}
+
+int Simulation::CreateBehavior(behavior &b) {
+    this->behaviors.push_back(b);
+    return (behaviors.size() - 1);
 }
 
 float Simulation::get_distance(const Point::Point_p a, const Point::Point_p b) {
@@ -65,5 +78,5 @@ float Simulation::get_distance(const Point::Point_p a, const Point::Point_p b) {
 
 Simulation::~Simulation()
 {
-
+    delete control;
 }

@@ -10,26 +10,31 @@
 #include "Point.h"
 #include "State.h"
 #include "Renderer.h"
+#include "Control.h"
 
 using namespace std;
 
 class Simulation
 {
 public:
-    //typedef vector<Point_p> target;
-    //typedef void (*action)(Point_p);
+    typedef void (*rule)(Point::Point_p, Control&);
+    typedef vector<rule> behavior;
 
     Simulation();
     ~Simulation();
 
     State curr_state;
-    void CreatePoint(float x, float y, float ang, float vel);
+    void CreatePoint(float x, float y, float ang, float vel, int b);
+    int CreateBehavior(behavior &b);
     void Run(int gen_count);
     void Run(int gen_count, Renderer &r);
     float get_distance(const Point::Point_p a,const Point::Point_p b);
 
 private:
+    Control *control;
+    vector<behavior> behaviors;
     void UpdateState();
+    void Move(Point::Point_p p);
     void DrawPoints();
 };
 
