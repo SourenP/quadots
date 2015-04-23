@@ -51,13 +51,13 @@ int b = s->CreateBehavior(circle);
 
 When a behavior is added to the Simulation, an index is returned. You pass this index to any point you want to have that behavior. So we save this "behavior index" in ```b```.
 
-So let's make our points!
+Now we're ready to make our points!
 
 They will both have positions x = 200, y = 200.
 
 The first point will be facing at an angle = 0 and the other 180. So back to back.
 
-The first has a velocity = 1 and the other 2. So that the second draws a bigger circle!
+The first has a velocity = 1 and the other 2. So that the second draws a bigger circle.
 
 And finally, we'll give them both the same behavior index ```b```.
 
@@ -68,6 +68,8 @@ s->CreatePoint(200, 200, 180, 2, b);
 ``` 
 
 Now all that's left is to run the simulation. But since we want to see our points visually lets define a renderer to run the simulation with.
+
+The renderer will be a window of size 400/400 and will run at 32 steps per second.
 
 ```c++
 // Initialize Renderer
