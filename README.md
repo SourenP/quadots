@@ -59,7 +59,16 @@ int b = s->CreateBehavior(circle);
 
 When a behavior is added to the Simulation, an index is returned. This index is then passed to a point to which you want to assign that behavior.
 
+
 So let's make our points!
+
+They will both have positions x = 200, y = 200
+
+The first point will be facing at an angle = 0 and the other 180. So back to back.
+
+The first has a velocity = 1 and the other 2.
+
+And finally, we'll give them both the same behavior index b.
 
 ```
 // Create two Points in the middle of the screen facing opposite directions
@@ -77,7 +86,7 @@ Renderer twodee = Renderer(400,400, 32);
 s->Run(0, twodee);
 ```
 
-Here is our full code:
+**Here is our full code:**
 ```
 void rotate(Point::Point_p p, Control& c) {
     p->ang += 2;
@@ -110,11 +119,6 @@ int main()
     return 0;
 }
 ```
-
-
-There is a probem: you can't really call getNeighbors(d) in rotate. Going to ask David.
-
-Additional Feature: target is dynamic.
 
 ### Examples
 **Boids:**
