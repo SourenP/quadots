@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Space.h"
+#include "Dot.h"
 using namespace std;
 
 void rotate(Space::Dot_p d) {
@@ -9,7 +10,7 @@ void rotate(Space::Dot_p d) {
 int main()
 {
     // Initialize space
-    Space *s = new Space(400, 400, 24);
+    Space *s = new Space(400, 400, 32);
 
     // Create black r = 0, g = 0, b = 0, a = 255
     array<int8_t,4> black = {0, 0, 0, 255};

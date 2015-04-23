@@ -11,18 +11,10 @@
 #include <SDL2/SDL.h>
 using namespace std;
 
+class Dot;
 class Space
 {
     public:
-        struct Dot {
-            float x;
-            float y;
-            array<int8_t,4> color;
-            float ang;
-            float vel;
-            int type;
-        };
-        
         typedef shared_ptr<Dot> Dot_p;
         typedef vector<Dot_p> target;
         typedef void (*action)(Dot_p);

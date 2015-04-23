@@ -1,4 +1,5 @@
 #include "Space.h"
+#include "Dot.h"
 using namespace std;
 
 Space::Space(int screen_w, int screen_h, int32_t sps)
@@ -78,13 +79,7 @@ void Space::DrawDots() {
     Creates a new dot and returns a smart pointer to it.
 */
 Space::Dot_p Space::CreateDot(float x, float y, array<int8_t,4> color, float ang, float vel, int type) {
-    Dot_p new_dot(new Dot());
-    new_dot->x = x;
-    new_dot->y = y;
-    new_dot->color = color;
-    new_dot->ang = ang;
-    new_dot->vel = vel;
-    new_dot->type = type;
+    Dot_p new_dot(new Dot(x, y, color, ang, vel, type, this));
     dots.push_back(new_dot);
     return dots.back();
 }
