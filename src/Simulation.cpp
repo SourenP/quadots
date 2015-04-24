@@ -47,6 +47,10 @@ void Simulation::Run(int gen_count, Renderer &r) {
 */
 void Simulation::UpdateState() {
     for (Point::Point_p p : curr_state.points) {
+        if (p->bindex > behaviors.size()) {
+            logError(cerr, "Behavior index out of range: " + to_string(p->bindex));
+            return;
+        }
         for (rule r : behaviors[p->bindex])
             r(p, *control);
         Move(p);
@@ -74,6 +78,10 @@ int Simulation::CreateBehavior(behavior &b) {
 
 float Simulation::get_distance(const Point::Point_p a, const Point::Point_p b) {
     return sqrt(pow(a->x - b->x,2) + pow(a->y - b->y,2));
+}
+
+void Simulation::logError(ostream &os, const string &msg) {
+    os << " error: " << msg << endl;
 }
 
 Simulation::~Simulation()

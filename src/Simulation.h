@@ -36,6 +36,7 @@ private:
     void UpdateState();
     void Move(Point::Point_p p);
     void DrawPoints();
+    void logError(ostream &os, const string &msg);
 };
 
 #endif

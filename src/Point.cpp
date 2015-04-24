@@ -1,7 +1,7 @@
 #include "Point.h"
 using namespace std;
 
-Point::Point(float x, float y, float ang, float vel, int bindex)
+Point::Point(float x, float y, float ang, float vel, unsigned int bindex)
 {
 	this->x = x;
 	this->y = y;

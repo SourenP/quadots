@@ -10,13 +10,13 @@ class Point
     public:
     	typedef shared_ptr<Point> Point_p;
 
-        Point(float x, float y, float ang, float vel, int bindex);
+        Point(float x, float y, float ang, float vel, unsigned int bindex);
 
         float x;
         float y;
         float ang;
         float vel;
-        int bindex;
+        unsigned int bindex;
     private:
 };
 
