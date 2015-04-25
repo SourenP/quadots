@@ -3,64 +3,34 @@
 #include "quadtree"
 #include "Point"
 
-#define DEAD_STATE 0
-
 /* Define constructor */
-quadtree::quadtree(float xcor, float ycor, int state, float width, float height, int level, int maxlevel) {
-  if (level == maxlevel) {
-    cout<<"Error: Can not split quadtree further.";
-    return;
-  }
-
-  this.xcor = xcor;
-  this.ycor = ycor;
-  this.state = state;
-  this.width = width;
-  this.height = height;
-  this.level = level;
-  this.maxlevel = maxlevel;
-
-  topleft = new Quadtree(xcor, ycor, DEAD_STATE, width/2, height/2, level+1, maxLevel);
-  topright = new Quadtree(xcor + width/2, ycor, DEAD_STATE, width/2, height/2, level+1, maxLevel);
-  bottomleft = new Quadtree(xcor, ycor + height/2, DEAD_STATE, width/2, height/2, level+1, maxLevel);
-  bottomright = new Quadtree(xcor + width/2, ycor + height/2, DEAD_STATE, width/2, height/2, level+1, maxLevel);
-}
-
-/* Define destructor */
-quadtree::~quadtree() {
-  if (level == maxlevel)
-    return;
-
-  delete topleft;
-  delete topright;
-  delete bottomleft;
-  delete bottomright;
+quadtree::quadtree(float x, float y, int level) {
+	if (level == maxlevel) {
+    		cout<<"Error: Can not split quadtree further.";
+    		return;
+  	}
+	this.x = x;
+	this.y = y;
+	this.level = level;
+	nodes = new quadtree[MAX_NODES];
 }
 
 void quadtree::pushPoint(Point p) {
-	//belongs to parent
-	if (level == maxlevel){
-		this.points.push_back(p); //push Point p to vector of Point(s)
-		return;
+	if (nodes[0] != null) {		//quadtree has children
+		int index = getIndex(p);	//get appropriate location for Point
+
+		if (index != -1) {
+			nodes[index].pushPoint(p);
+			return;
+		}
 	}
 
-	//else check inner nodes
-	if (contains(NW, p)) {
-		NW->pushPoint(p); return;
-	}
-	else if (contains(NE, p)) {
-		NE->pushPoint(p); return;
-	}
-	else if (contains(SW, p)) {
-		SW->pushPoint(p); return;
-	}
-	else if (contains(SE, p)) {
-		SE->pushPoint(p); return;
-	}
-	if (contains(this, p)) {
-		this.points.push_back(p);
-	}
+	points.push_back(p);	//no children, push to parent
 
+	if (points.size() > MAX_POINTS && level < MAX_LEVELS) {
+		if (nodes[0] == null)		//no children, so split.
+			split();
+	}
 
 }
 
