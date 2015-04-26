@@ -23,12 +23,17 @@ public:
   	vector<Point> getPointsAt(float x, float y);
 
 private:
-  	float x;
-  	float y;
+  	double x;
+  	double y;
+	double width;
+	double height;
   	int level;
   	int maxlevel = MAX_LEVEL;
   
   	vector<Point> points;
 	quadtree [] nodes;
+
+	int getIndex(Point p);
+	void split();
 };
 

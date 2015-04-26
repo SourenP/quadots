@@ -4,17 +4,20 @@
 #include "Point"
 
 /* Define constructor */
-quadtree::quadtree(float x, float y, int level) {
+quadtree::quadtree(float x, float y, float width, float height, int level) {
 	if (level == maxlevel) {
     		cout<<"Error: Can not split quadtree further.";
     		return;
   	}
 	this.x = x;
 	this.y = y;
+	this.width = width;
+	this.height = height;
 	this.level = level;
 	nodes = new quadtree[MAX_NODES];
 }
 
+/* Insert Point into the quadtree */
 void quadtree::pushPoint(Point p) {
 	if (nodes[0] != null) {		//quadtree has children
 		int index = getIndex(p);	//get appropriate location for Point
@@ -27,80 +30,65 @@ void quadtree::pushPoint(Point p) {
 
 	points.push_back(p);	//no children, push to parent
 
-	if (points.size() > MAX_POINTS && level < MAX_LEVELS) {
+	if (points.size() > MAX_POINTS && level < MAX_LEVELS) {		//if no. of points in parent exceed MAX_POINTS (=1)
 		if (nodes[0] == null)		//no children, so split.
-			split();
-	}
+			splitIntoQuads();
 
-}
-
-quadtree::getNeighbouringPoints(float xcor, float ycor) {
-  vector<Point> neighbourList;
-
-  /* Add checks for if the p exists or not - IMPORTANT!!! */
-  neighbourList.push_back(getPointsAt(xcor-1, ycor-1));
-  neighbourList.push_back(getPointsAt(xcor-1, ycor));
-  neighbourList.push_back(getPointsAt(xcor-1, ycor+1));
-  neighbourList.push_back(getPointsAt(xcor, ycor-1));
-  neighbourList.push_back(getPointsAt(xcor, ycor+1));
-  neighbourList.push_back(getPointsAt(xcor+1, ycor-1));
-  neighbourList.push_back(getPointsAt(xcor+1, ycor));
-  neighbourList.push_back(getPointsAt(xcor+1, ycor+1));
-
-  return neighbourList;
-}
-
-vector<Point> quadtree::getPointsAt(float x1, float y1) {
-  /* confused about this, have to think. */
-	if (level == maxlevel)
-		return points; 
-
-	vector<Point> returnpoints, childReturnpoints;
-	//belongs to 
-	if (!points.empty()) {
-		returnps = points;
-	}
-	if (x1 > xcor + width / 2.0f && x1 < xcor + width) {
-		if (y1 > ycor + height / 2.0f && y1 < ycor + height) {
-			childReturnps = SE->GetPointsAt(x1, y1);
-			returnps.insert(returnps.end(), childReturnps.begin(), childReturnps.end());
-			return returnps;
-		}
-		else if (y1 > ycor && y1 <= ycor + height / 2.0f) {
-			childReturnps = NE->GetpsAt(x1, y1);
-			returnps.insert(returnps.end(), childReturnps.begin(), childReturnps.end());
-			return returnps;
+		int k = 0;
+		while (k < points.size()) {
+			Point temp = points.back();
+			int index = getIndex(temp);
+			if (index != -1) {
+				points.pop_back();
+				nodes[index] = nodes.pushPoint(temp);
+			}
+			else
+				k++;
 		}
 	}
-	else if (x1 > x && x1 <= x + width / 2.0f) {
-		if (y1 > ycor + height / 2.0f && y1 < ycor + height) {
-			childReturnps = SW->GetpsAt(x1, y1);
-			returnps.insert(returnps.end(), childReturnps.begin(), childReturnps.end());
-			return returnps;
-		}
-		else if (y1 > ycor && y1 <= ycor + height / 2.0f) {
-			childReturnps = NW->GetpsAt(x1, y1);
-			returnps.insert(returnps.end(), childReturnps.begin(), childReturnps.end());
-			return returnps;
-		}
+}
+
+/* Determine which node Point belongs to.
+  If a Point does not fit completely into any one node, return -1. */
+int quadtree::getIndex(Point p) {
+	int index = -1;
+	boolean topquad, bottomquad;
+
+	double verMidpoint = x + 0.5*width;
+	double horMidpoint = y + 0.5*height;
+
+	if (p.y < horMidpoint)
+		topquad = true;
+	else if (p.y > horMidpoint)
+		bottomquad = true;
+
+	if (topquad) {
+		if (p.x < verMidpoint)
+			index = 0;
+		else if (p.x > verMidpoint)
+			index = 1;
 	}
-
-	return returnps;
+	else if (bottomquad) {
+		if (p.x > verMidpoint)
+			index = 2;
+		else if (p.x < verMidpoint)
+			index = 3;
+	}
+	return index; 
 }
 
+void quadtree::splitIntoQuads() {
+	int newWidth = width/2;
+	int newHeight = height/2;
+	int newLevel = level + 1;
+
+	nodes[0] = new quadtree(x, y, newWidth, newHeight, newLevel);
+	nodes[1] = new quadtree(x + newWidth, y, newWidth, newHeight, newLevel);
+	nodes[2] = new quadtree(x + newWidth, y + newHeight, newWidth, newHeight, newLevel);
+	nodes[3] = new quadtree(x, y + newHeight, newWidth, newHeight, newLevel);
 }
 
-//check if point lies in the passed node
-bool Quadtree::contains(Quadtree *child,Point *p) {
-	return	 !(p->x < child->x ||
-		p->y < child->y ||
-		p->x > child->x + child->width ||
-		p->y > child->y + child->height ||
-		p->x + p->width < child->x ||
-		p->y + p->height < child->y ||
-		p->x + p->width > child->x + child->width ||
-		p->y + p->height > child->y + child->height);
+ 
+
+
 }
-
-
-
