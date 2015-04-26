@@ -77,6 +77,7 @@ int quadtree::getIndex(Point p) {
 	return index; 
 }
 
+/* Split quadtree into 4 nodes */
 void quadtree::splitIntoQuads() {
 	int newWidth = width/2;
 	int newHeight = height/2;
@@ -88,7 +89,15 @@ void quadtree::splitIntoQuads() {
 	nodes[3] = new quadtree(x, y + newHeight, newWidth, newHeight, newLevel);
 }
 
- 
+/* Clear quadtree by recursively calling its nodes and erasing Points */
+void quadtree::clearQuadtree() {
+	points.erase();
 
-
+	for (int i = 0; i < nodes.length(); i++) {
+		if (nodes[i] != null) {
+			nodes[i].clearQuadtree();
+			nodes[i] = null;
+		}
+	}
 }
+

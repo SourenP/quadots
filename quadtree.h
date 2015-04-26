@@ -19,8 +19,8 @@ public:
 	quadtree(float x, float y, int level);  //constructor
   
   	void pushPoint(Point p);
-  	vector<Point> getNeighbouringPoints(float x, float y);
-  	vector<Point> getPointsAt(float x, float y);
+	void clearQuadtree();	
+  	vector<Point> getNeighbouringPoints(Point p);
 
 private:
   	double x;
