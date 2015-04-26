@@ -111,31 +111,38 @@ int quadtree::findPoint(quadtree* q, Point p){
 }
 
 int quadtree::traverseTree(Point p){
+	//variables to hold level for the 4 quadrants
+	int point_levelq0 = (findPoint(nodes[0], p); 
+	int point_levelq1 = (findPoint(nodes[1], p);
+	int point_levelq2 = (findPoint(nodes[2], p);
+	int point_levelq3 = (findPoint(nodes[3], p);
+
 	//check quadrant 0
-	if (findPoint(nodes[0], p) != 0) {
-		if (findPoint(nodes[0], p) != -1) 
-			return findPoint(nodes[0], p); //return level
+	if (point_levelq0 != 0) {
+		if (point_levelq0 != -1)
+			return point_levelq0; //return level
 		traverseTree(Point p);
 	}
 
 	//check quadrant 1
-	else if (findPoint(nodes[1], p) != 0) {
-		if (findPoint(nodes[1], p) != -1) 
-			return findPoint(nodes[1], p); //return level
+	else if (point_levelq1 != 0) {
+		if (point_levelq1 != -1)
+			return point_levelq1; //return level
 		traverseTree(Point p);
 	}
 	//check quadrant 2
-	else if (findPoint(nodes[2], p) != 0) {
-		if (findPoint(nodes[2], p) != -1) 
-			return findPoint(nodes[2], p); //return level
+	else if (point_levelq2 != 0) {
+		if (point_levelq2 != -1)
+			returnpoint_levelq2; //return level
 		traverseTree(Point p);
 	}
-	else if (findPoint(nodes[3], p) != 0) {
-		if (findPoint(nodes[3], p) != -1) 
-			return findPoint(nodes[3], p); //return level
+	else if (point_levelq3 != 0) {
+		if (point_levelq3 != -1)
+			return point_levelq3; //return level
 		traverseTree(Point p);
 	}
 
+	else
 	return 0; //not found
 
 }
