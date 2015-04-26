@@ -101,34 +101,38 @@ void quadtree::clearQuadtree() {
 	this->split = false;
 }
 
-int quadtree::findPoint(Point p){
-	if (this->nodes[0] == NULL) //no children
+int quadtree::findPoint(quadtree* q, Point p){
+	if (q->nodes[0] == NULL) //no children
 		return 0;
-	else if (this->x == p.x && this.y == p.y) //point exists in the tree
-		return this->level;
+	else if (q->x == p.x && q->y == p.y) //point exists in the tree
+		return q->level;
 	else return -1; //continue
 
 }
 
 int quadtree::traverseTree(Point p){
 	//check quadrant 0
-	if (findPoint(nodes[0], p) != 0){
-		if (findPoint(nodes[0], p) != -1) return findPoint(nodes[0], p); //return level
+	if (findPoint(nodes[0], p) != 0) {
+		if (findPoint(nodes[0], p) != -1) 
+			return findPoint(nodes[0], p); //return level
 		traverseTree(Point p);
 	}
 
 	//check quadrant 1
-	else if (findPoint(nodes[1], d) != 0){
-		if (findPoint(nodes[1], d) != -1) return findPoint(nodes[1], d); //return level
+	else if (findPoint(nodes[1], p) != 0) {
+		if (findPoint(nodes[1], p) != -1) 
+			return findPoint(nodes[1], p); //return level
 		traverseTree(Point p);
 	}
 	//check quadrant 2
-	else if (findPoint(nodes[2], d) != 0){
-		if (findPoint(nodes[2], d) != -1) return findPoint(nodes[2], d); //return level
+	else if (findPoint(nodes[2], p) != 0) {
+		if (findPoint(nodes[2], p) != -1) 
+			return findPoint(nodes[2], p); //return level
 		traverseTree(Point p);
 	}
-	else if (findPoint(nodes[3], d) != 0){
-		if (findPoint(nodes[3], d) != -1) return findPoint(nodes[3], d); //return level
+	else if (findPoint(nodes[3], p) != 0) {
+		if (findPoint(nodes[3], p) != -1) 
+			return findPoint(nodes[3], p); //return level
 		traverseTree(Point p);
 	}
 
@@ -136,13 +140,12 @@ int quadtree::traverseTree(Point p){
 
 }
 
-
-vector<int> getNearestNeighbhour(Point p){
+std::vector<int> quadtree::getNearestNeighbour(Point p){
 	int level = traverseTree(p);
-	vector<Point> nearest_points;
-	vector<int> distances;
+	std::vector<Point> nearest_points;
+	std::vector<int> distances;
 	nearest_points = getAllPoints(level - 1);
-	for (i = 0; i < nearest_points.size(); i++)
+	for (int i = 0; i < nearest_points.size(); i++)
 		distance[i] = getDistance(point[i], p));
 		sort(distances.begin(), distances.end());
 		return distances;

@@ -27,6 +27,8 @@ public:
   	void pushPoint(Point p);
 	void clearQuadtree();	
   	std::vector<Point> getNeighbouringPoints(Point p);
+	int traverseTree(Point p);
+	std::vector<int> getNearestNeighbour(Point p);
 
 private:
 	bool split;
@@ -35,21 +37,7 @@ private:
 
 	int getIndex(Point p);
 	void splitIntoQuads();
+	int findPoint(quadtree* q, Point p);
 };
 
-/*
-class myquad {
-public:
-	void clearQuadtree();	
-  	std::vector<Point> getNeighbouringPoints(Point p);
- 
-private:
-	bool split;
-	quadtree* nodes[4];
-  	std::vector<Point> points;
-
-	int getIndex(Point p);
-	void splitIntoQuads();
-};
-*/
 #endif
