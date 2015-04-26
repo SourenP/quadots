@@ -86,7 +86,11 @@ void quadtree::splitIntoQuads() {
 }
 
 void quadtree::clearQuadtree() {
-	points.erase(points.end() - 1);		//start erasing from the end
+	std::cout<<"clear\n";
+	if (split == false) {
+		points.erase(points.end() - 1);		//start erasing from the end
+		return;
+	}
 
 	for (int i = 0; i < MAX_NODES; i++) {
 		if (split == true) {
@@ -94,5 +98,6 @@ void quadtree::clearQuadtree() {
 			nodes[i] = NULL;
 		}
 	}
+	this->split = false;
 }
 
