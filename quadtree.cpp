@@ -13,6 +13,7 @@ quadtree::quadtree(double x, double y, double width, double height, int level) {
 	this->width = width;
 	this->height = height;
 	this->level = level;
+	this->split = false;
 }
 
 void quadtree::pushPoint(Point p) {
@@ -24,7 +25,6 @@ void quadtree::pushPoint(Point p) {
 			return;
 		}
 	}
-
 	points.push_back(p);	//no children, push to parent
 
 	if (points.size() > MAX_POINTS && level < MAX_LEVELS) {		//if no. of points in parent exceed MAX_POINTS (=1)
