@@ -1,29 +1,26 @@
 #include <iostream>
-#include <stdio>
-#include "quadtree"
-#include "Point"
+#include <cstdio>
+#include "quadtree.h"
+#include "Point.h"
 
-/* Define constructor */
-quadtree::quadtree(float x, float y, float width, float height, int level) {
-	if (level == maxlevel) {
-    		cout<<"Error: Can not split quadtree further.";
+quadtree::quadtree(double x, double y, double width, double height, int level) {
+	if (this->level == MAX_LEVELS) {
+    		std::cout<<"Error: Can not split quadtree further.";
     		return;
   	}
-	this.x = x;
-	this.y = y;
-	this.width = width;
-	this.height = height;
-	this.level = level;
-	nodes = new quadtree[MAX_NODES];
+	this->x = x;
+	this->y = y;
+	this->width = width;
+	this->height = height;
+	this->level = level;
 }
 
-/* Insert Point into the quadtree */
 void quadtree::pushPoint(Point p) {
-	if (nodes[0] != null) {		//quadtree has children
+	if (split == true) {		//quadtree has children
 		int index = getIndex(p);	//get appropriate location for Point
 
 		if (index != -1) {
-			nodes[index].pushPoint(p);
+			nodes[index]->pushPoint(p);
 			return;
 		}
 	}
@@ -31,7 +28,7 @@ void quadtree::pushPoint(Point p) {
 	points.push_back(p);	//no children, push to parent
 
 	if (points.size() > MAX_POINTS && level < MAX_LEVELS) {		//if no. of points in parent exceed MAX_POINTS (=1)
-		if (nodes[0] == null)		//no children, so split.
+		if (split == false)		//no children, so split.
 			splitIntoQuads();
 
 		int k = 0;
@@ -40,7 +37,7 @@ void quadtree::pushPoint(Point p) {
 			int index = getIndex(temp);
 			if (index != -1) {
 				points.pop_back();
-				nodes[index] = nodes.pushPoint(temp);
+				nodes[index]->pushPoint(temp);
 			}
 			else
 				k++;
@@ -48,14 +45,12 @@ void quadtree::pushPoint(Point p) {
 	}
 }
 
-/* Determine which node Point belongs to.
-  If a Point does not fit completely into any one node, return -1. */
 int quadtree::getIndex(Point p) {
 	int index = -1;
-	boolean topquad, bottomquad;
+	bool topquad, bottomquad;
 
-	double verMidpoint = x + 0.5*width;
-	double horMidpoint = y + 0.5*height;
+	double verMidpoint = this->x + 0.5*this->width;
+	double horMidpoint = this->y + 0.5*this->height;
 
 	if (p.y < horMidpoint)
 		topquad = true;
@@ -77,26 +72,26 @@ int quadtree::getIndex(Point p) {
 	return index; 
 }
 
-/* Split quadtree into 4 nodes */
 void quadtree::splitIntoQuads() {
-	int newWidth = width/2;
-	int newHeight = height/2;
-	int newLevel = level + 1;
+	int newWidth = this->width/2;
+	int newHeight = this->height/2;
+	int newLevel = this->level + 1;
 
-	nodes[0] = new quadtree(x, y, newWidth, newHeight, newLevel);
-	nodes[1] = new quadtree(x + newWidth, y, newWidth, newHeight, newLevel);
-	nodes[2] = new quadtree(x + newWidth, y + newHeight, newWidth, newHeight, newLevel);
-	nodes[3] = new quadtree(x, y + newHeight, newWidth, newHeight, newLevel);
+	nodes[0] = new quadtree(x, this->y, newWidth, newHeight, newLevel);
+	nodes[1] = new quadtree(this->x + newWidth, this->y, newWidth, newHeight, newLevel);
+	nodes[2] = new quadtree(this->x + newWidth, this->y + newHeight, newWidth, newHeight, newLevel);
+	nodes[3] = new quadtree(this->x, this->y + newHeight, newWidth, newHeight, newLevel);
+
+	this->split = true;
 }
 
-/* Clear quadtree by recursively calling its nodes and erasing Points */
 void quadtree::clearQuadtree() {
-	points.erase();
+	points.erase(points.end() - 1);		//start erasing from the end
 
-	for (int i = 0; i < nodes.length(); i++) {
-		if (nodes[i] != null) {
-			nodes[i].clearQuadtree();
-			nodes[i] = null;
+	for (int i = 0; i < MAX_NODES; i++) {
+		if (split == true) {
+			nodes[i]->clearQuadtree();
+			nodes[i] = NULL;
 		}
 	}
 }
