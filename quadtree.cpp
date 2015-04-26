@@ -101,3 +101,38 @@ void quadtree::clearQuadtree() {
 	this->split = false;
 }
 
+int quadtree::findPoint(Point p){
+	if (this->nodes[0] == NULL) //no children
+		return 0;
+	else if (this->x == p.x && this.y == p.y) //point exists in the tree
+		return this->level;
+	else return -1; //continue
+
+}
+
+int quadtree::traverseTree(Point p){
+	//check quadrant 0
+	if (findPoint(nodes[0], p) != 0){
+		if (findPoint(nodes[0], p) != -1) return findPoint(nodes[0], p); //return level
+		traverseTree(Point p);
+	}
+
+	//check quadrant 1
+	else if (findPoint(nodes[1], d) != 0){
+		if (findPoint(nodes[1], d) != -1) return findPoint(nodes[1], d); //return level
+		traverseTree(Point p);
+	}
+	//check quadrant 2
+	else if (findPoint(nodes[2], d) != 0){
+		if (findPoint(nodes[2], d) != -1) return findPoint(nodes[2], d); //return level
+		traverseTree(Point p);
+	}
+	else if (findPoint(nodes[3], d) != 0){
+		if (findPoint(nodes[3], d) != -1) return findPoint(nodes[3], d); //return level
+		traverseTree(Point p);
+	}
+
+	return 0; //not found
+
+}
+
