@@ -146,5 +146,5 @@ vector<int> getNearestNeighbhour(Point p){
 		distance[i] = getDistance(point[i], p));
 		sort(distances.begin(), distances.end());
 		return distances;
-
+}
 
