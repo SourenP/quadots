@@ -154,7 +154,7 @@ std::vector<int> quadtree::getNearestNeighbour(Point p){
 	nearest_points = getAllPoints(level - 1);
 	for (int i = 0; i < nearest_points.size(); i++)
 		distance[i] = getDistance(point[i], p));
-		sort(distances.begin(), distances.end());
-		return distances;
+	sort(distances.begin(), distances.end());
+	return distances;
 }
 
