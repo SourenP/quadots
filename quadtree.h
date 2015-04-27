@@ -16,6 +16,7 @@ Each level can not have more than 4 nodes. */
 
 class quadtree {
 public:
+	quadtree() {};
 	quadtree(double x, double y, double width, double height, int level);  //constructor
 
   	double x;
@@ -27,6 +28,7 @@ public:
   	void pushPoint(Point p);
 	void clearQuadtree();	
 	int traverseTree(quadtree* q, Point p);
+	quadtree traverseTree(quadtree* q, int level);
 	std::vector<Point> getNearestNeighbours(Point p);
 
 private:
