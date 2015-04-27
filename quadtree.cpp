@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cstdio>
+#include <cmath>
+#include <map>
 #include "quadtree.h"
 #include "Point.h"
 
@@ -101,60 +103,57 @@ void quadtree::clearQuadtree() {
 	this->split = false;
 }
 
-int quadtree::findPoint(quadtree* q, Point p){
-	if (q->nodes[0] == NULL) //no children
-		return 0;
-	else if (q->x == p.x && q->y == p.y) //point exists in the tree
-		return q->level;
-	else return -1; //continue
-
+int quadtree::traverseTree(quadtree* q, Point p) {
+	int found = 0;
+	if (split == false) {		//calling node has no children
+		if (this->x == p.x && this->y == p.y)
+			return this->level; 
+		else
+			return -1;	//point not found
+	}
+	else if (split == true) {
+		found = traverseTree(nodes[0], p);
+		if (found == -1)
+			found = traverseTree(nodes[1], p);
+		if (found == -1)
+			found = traverseTree(nodes[2], p);
+		if (found == -1)
+			found = traverseTree(nodes[3], p);
+	}
+	return found;
 }
 
-int quadtree::traverseTree(Point p){
-	//variables to hold level for the 4 quadrants
-	int point_levelq0 = (findPoint(nodes[0], p); 
-	int point_levelq1 = (findPoint(nodes[1], p);
-	int point_levelq2 = (findPoint(nodes[2], p);
-	int point_levelq3 = (findPoint(nodes[3], p);
+std::vector<Point> quadtree::getNearestNeighbours(Point p) {
+	int level = traverseTree(this, p);
+	std::vector<Point> nearest_points = getPointsAtLevel(level - 1);
+	std::map<double, int> neighbours;
 
-	//check quadrant 0
-	if (point_levelq0 != 0) {
-		if (point_levelq0 != -1)
-			return point_levelq0; //return level
-		traverseTree(Point p);
+	for (int i = 0; i < nearest_points.size(); i++)	{ //change to iterator	
+		neighbours[getDistance(nearest_points[i], p)] = i;
 	}
 
-	//check quadrant 1
-	else if (point_levelq1 != 0) {
-		if (point_levelq1 != -1)
-			return point_levelq1; //return level
-		traverseTree(Point p);
+	std::vector<Point> fin_neighbours;	//final list of neighbours;
+	
+	std::map<double, int>::iterator it;
+	int i = 0;
+	for (it = neighbours.begin(); it != neighbours.end(); it++) { 
+		if (i < 4) {			//get 4 closest points
+			fin_neighbours.push_back(nearest_points[it->second]);
+			i++;
+		}
+		else
+			break;
 	}
-	//check quadrant 2
-	else if (point_levelq2 != 0) {
-		if (point_levelq2 != -1)
-			returnpoint_levelq2; //return level
-		traverseTree(Point p);
-	}
-	else if (point_levelq3 != 0) {
-		if (point_levelq3 != -1)
-			return point_levelq3; //return level
-		traverseTree(Point p);
-	}
-
-	else
-	return 0; //not found
-
+	
+	return fin_neighbours;
 }
 
-std::vector<int> quadtree::getNearestNeighbour(Point p){
-	int level = traverseTree(p);
-	std::vector<Point> nearest_points;
-	std::vector<int> distances;
-	nearest_points = getAllPoints(level - 1);
-	for (int i = 0; i < nearest_points.size(); i++)
-		distance[i] = getDistance(point[i], p));
-	sort(distances.begin(), distances.end());
-	return distances;
+std::vector<Point> quadtree::getPointsAtLevel(int level) {
+	std::vector<Point> temp;
+	return temp;	
+}
+
+double quadtree::getDistance(Point p1, Point p2) {
+	return (int)sqrt((p2.x - p1.x)*(p2.x - p1.x) + (p2.y - p1.y)*(p2.y - p1.y));	
 }
 
