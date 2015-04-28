@@ -21,8 +21,7 @@ private:
 template <class elem>
 State<elem>::State() {};
 
-#endif
-/*
+template <class elem>
 ostream& operator<<(ostream &os, const State<elem>& s)
 {
 	os << "[\n";
@@ -32,4 +31,4 @@ ostream& operator<<(ostream &os, const State<elem>& s)
 
 	return os;
 }
-*/
+#endif
