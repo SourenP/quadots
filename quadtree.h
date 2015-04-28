@@ -32,7 +32,7 @@ public:
 	void clearQuadtree();	
 	int traverseTree(Point p);
 	quadtree traverseTree(quadtree* q, int level);
-	void getNearestNeighbours(quadtree* root);
+	void getNearestNeighbours(quadtree root, double rad, Point p);
 	void traverseTree();
 
 private:
@@ -43,8 +43,10 @@ private:
 	int getIndex(Point p);
 	int splitIntoQuads();
 	int findPoint(quadtree* q, Point p);
-	double getDistance(Point p1, Point p2);
+	double getDistance(Point p1);
 	std::vector<Point> getPointsAtLevel(int level);
+	bool isLeaf();
+	std::vector<quadtree> getChildren();
 };
 
 #endif

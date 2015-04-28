@@ -219,7 +219,8 @@ std::vector<Point> quadtree::getPointsAtLevel(int level) {
 	return foundPoints;
 }
 
-double quadtree::getDistance(Point p1, Point p2) {
+double quadtree::getDistance(Point p1) {
+	Point p2 = this->points[0];
 	return sqrt((p2.x - p1.x)*(p2.x - p1.x) + (p2.y - p1.y)*(p2.y - p1.y));	
 }
 
@@ -265,67 +266,51 @@ int quadtree::traverseTree(Point p) {
 	return level;
 }*/
 
-void quadtree::getNearestNeighbours(quadtree* root) {	
-	/*if (this->nodes[0] == NULL) {
-		double distance = getDistance(points[0], p);
-		if (distance < RADIUS)
-			neighboursList.push_back(points[0]);
-		return;
-	}
-	
-	double distance = getDistance(points[0], p);
-	if (distance < RADIUS)
-		neighboursList.push_back(points[0]);
-	*/
-	/*
-	if (nodes[0] != NULL) {	
-   	this->nodes[0]->getNearestNeighbours(p);
-        this->nodes[1]->getNearestNeighbours(p);
-        this->nodes[2]->getNearestNeighbours(p);
-        this->nodes[3]->getNearestNeighbours(p);
-	}*/
+void quadtree::getNearestNeighbours(quadtree root, double rad, Point q) {
+	std::stack<quadtree> s;
+	s.push(root);
+	double distance;
+	std::cout<<"hi\n";
+	while(!s.empty()) {
+		quadtree T = s.top();
+		s.pop();
 
-	quadtree* current = root;
-	std::stack<quadtree*> s;
-	bool done = 0;
-
-	for (int i = 0; i < 4; i++) {
-		done = 0;
-		while(!done) {
-			if (current != NULL && current->nodes[i] != NULL) {
-				std::cout<<"hullo\n";
-				s.push(current);
-				current = current->nodes[1];
-			}
-			else {
-				if(!s.empty()) {
-					current = s.top();
+		if (!T.isLeaf()) {
+			for(auto C : T.getChildren()) {
+				std::cout<<"in for\n";
+				if (C.isLeaf()) {
+					if (C.getDistance(q) < rad)
+						neighboursList.push_back(C.points[0]);
 					s.pop();
-					std::cout<<current->points[0].x<<","<<current->points[0].y<<"\n";
 				}
+				/*if (C.intersect(rad, q)) {
+					s.push(C);
+				}*/
 				else
-					done = 1;
+					s.push(C);
 			}
 		}
 	}
 }
 
+std::vector<quadtree> quadtree::getChildren() {
+	std::vector<quadtree> childrenList; 
+	if (this->nodes[0] != NULL) {
+		std::cout<<"in get children\n";
+		for (int i = 0; i < 4; i++)
+			childrenList.push_back(*nodes[i]);
+	}
+	return childrenList;
+}
 
-void quadtree::getNearestNeighbours(quadtree root, float rad, Point q) {
-	std::stack<quadtree> s;
-	s.push()
-
-	while(!s.empty()) {
-		quadtree T = s.top();
-		s.pop();
-
-		for(auto C : T.getChildren()) {
-			if C.isLeaf() {
-				// examine points
-			}
-			if C.intersect(rad, q) {
-				s.push(C);
-			}
-		}
+bool quadtree::isLeaf() {
+	std::cout<<"in is leaf\n";
+	if (this->nodes[0] != NULL) {
+		std::cout<<"false";
+		return false;
+	}
+	else {
+		std::cout<<"true";
+		return true;
 	}
 }
