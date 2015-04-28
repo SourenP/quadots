@@ -6,8 +6,8 @@
 #include "Point.h"
 
 quadtree::quadtree(double x, double y, double width, double height, int level) {
-	if (this->level == MAX_LEVELS) {
-    		std::cout<<"Error: Can not split quadtree further.";
+	if (level == MAX_LEVELS) {
+    		std::cout<<"Error: Can not split quadtree further.\n";
     		return;
   	}
 	this->x = x;
@@ -16,6 +16,13 @@ quadtree::quadtree(double x, double y, double width, double height, int level) {
 	this->height = height;
 	this->level = level;
 	this->split = false;
+}
+
+quadtree::~quadtree() {
+	delete nodes[0];
+	delete nodes[1];
+	delete nodes[2];
+	delete nodes[3];
 }
 
 void quadtree::pushPoint(Point p) {
@@ -28,10 +35,12 @@ void quadtree::pushPoint(Point p) {
 		}
 	}
 	points.push_back(p);	//no children, push to parent
-
+	
 	if (points.size() > MAX_POINTS && level < MAX_LEVELS) {		//if no. of points in parent exceed MAX_POINTS (=1)
-		if (split == false)		//no children, so split.
+		if (split == false) {		//no children, so split.
+			std::cout<<"splitting because points size= "<<points.size()<<"\n";
 			splitIntoQuads();
+		}
 
 		int k = 0;
 		while (k < points.size()) {
@@ -75,20 +84,18 @@ int quadtree::getIndex(Point p) {
 }
 
 void quadtree::splitIntoQuads() {
-	int newWidth = this->width/2;
-	int newHeight = this->height/2;
-	int newLevel = this->level + 1;
+	int newWidth = width/2;
+	int newHeight = height/2;
+	int newLevel = level + 1;
+	nodes[0] = new quadtree(x, y, newWidth, newHeight, newLevel);
+	nodes[1] = new quadtree(x + newWidth, y, newWidth, newHeight, newLevel);
+	nodes[2] = new quadtree(x + newWidth, y + newHeight, newWidth, newHeight, newLevel);
+	nodes[3] = new quadtree(x, y + newHeight, newWidth, newHeight, newLevel);
 
-	nodes[0] = new quadtree(x, this->y, newWidth, newHeight, newLevel);
-	nodes[1] = new quadtree(this->x + newWidth, this->y, newWidth, newHeight, newLevel);
-	nodes[2] = new quadtree(this->x + newWidth, this->y + newHeight, newWidth, newHeight, newLevel);
-	nodes[3] = new quadtree(this->x, this->y + newHeight, newWidth, newHeight, newLevel);
-
-	this->split = true;
+	split = true;
 }
 
 void quadtree::clearQuadtree() {
-	std::cout<<"clear\n";
 	if (split == false) {
 		points.erase(points.end() - 1);		//start erasing from the end
 		return;
@@ -97,10 +104,10 @@ void quadtree::clearQuadtree() {
 	for (int i = 0; i < MAX_NODES; i++) {
 		if (split == true) {
 			nodes[i]->clearQuadtree();
-			nodes[i] = NULL;
+			//this->split = false;
 		}
 	}
-	this->split = false;
+	split = false;
 }
 
 int quadtree::traverseTree(quadtree* q, Point p) {
@@ -194,3 +201,17 @@ double quadtree::getDistance(Point p1, Point p2) {
 	return sqrt((p2.x - p1.x)*(p2.x - p1.x) + (p2.y - p1.y)*(p2.y - p1.y));	
 }
 
+/* Use this function for testing */
+void quadtree::traverseTree() {
+	if (split != true) {
+		for (int i = 0; i < this->points.size(); i++)
+			std::cout<<"At level "<<this->level<<", we have: "<<points[i].x<<","<<points[i].y<<"\n";
+		return;
+	}
+	else {
+		this->nodes[0]->traverseTree();
+		this->nodes[1]->traverseTree();
+		this->nodes[2]->traverseTree();
+		this->nodes[3]->traverseTree();
+	}
+}

@@ -10,14 +10,14 @@ Each level will consist of a vector of Points.
 The quadtree library will also have pointer to its parent node and 4 children nodes. 
 Each level can not have more than 4 nodes. */
 
-#define MAX_LEVELS 10
+#define MAX_LEVELS 3
 #define MAX_POINTS 1
 #define MAX_NODES 4
 
 class quadtree {
 public:
-	quadtree() {};
 	quadtree(double x, double y, double width, double height, int level);  //constructor
+	~quadtree();	//destructor.. incomplete 
 
   	double x;
   	double y;
@@ -30,6 +30,7 @@ public:
 	int traverseTree(quadtree* q, Point p);
 	quadtree traverseTree(quadtree* q, int level);
 	std::vector<Point> getNearestNeighbours(Point p);
+	void traverseTree();
 
 private:
 	bool split;
