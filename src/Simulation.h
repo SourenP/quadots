@@ -90,7 +90,8 @@ void Simulation<elem>::Run(int gen_count, Renderer<elem> &r) {
 */
 template <class elem>
 void Simulation<elem>::UpdateState() {
-    for (Elem_p p : curr_state.elements) {
+    State<elem> new_state = curr_state;
+    for (Elem_p p : new_state.elements) {
         if (p->get_b() > behaviors.size()) {
             logError(cerr, "Behavior index out of range.");
             return;
@@ -99,6 +100,7 @@ void Simulation<elem>::UpdateState() {
             r(p, *control);
         p->update();
     }
+    curr_state = new_state;
 }
 
 /*

@@ -3,7 +3,7 @@
 using namespace std;
 
 
-void rotate(Point::Point_p p, Control<Point>& c) {
+void reach(Point::Point_p p, Control<Point>& c) {
     Point::Point_p n = c.get_nearest(p);
     if (n != nullptr) {
         p->set_x(p->get_x() - (p->get_x() - n->get_x())/10);
@@ -13,10 +13,19 @@ void rotate(Point::Point_p p, Control<Point>& c) {
     }
 }
 
+void go(Point::Point_p p, Control<Point>& c) {
+    Point::Point_p n = c.get_nearest(p);
+    if (n != nullptr) {
+        p->set_x(n->get_x());
+    } else {
+        cout << "null?" << endl;
+    }
+}
+
 int main()
 {
     // Brains
-    Simulation<Point>::rule rot = &rotate;
+    Simulation<Point>::rule rot = &go;
     Simulation<Point>::behavior circle = {rot};
 
     // Initialize Simulation
@@ -27,7 +36,6 @@ int main()
 
     // Create two Points in the middle of the screen facing opposite directions
     s->CreateElement(Point(100, 100, b));
-    s->CreateElement(Point(200, 200, b));
     s->CreateElement(Point(300, 300, b));
 
     // Initialize Renderer

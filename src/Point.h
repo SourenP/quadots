@@ -7,12 +7,15 @@ using namespace std;
 
 class Point
 {
+    protected:
+        static int nextID;
     public:
         typedef shared_ptr<Point> Point_p;
 
         Point();
         Point(float x, float y, unsigned int bindex);
 
+        unsigned int get_id();
         float get_x();
         float get_y();
         unsigned int get_b();
@@ -26,6 +29,7 @@ class Point
         float x;
         float y;
         unsigned int bindex;
+        unsigned id;
 };
 
 #endif

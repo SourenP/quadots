@@ -1,6 +1,8 @@
  #include "Point.h"
 using namespace std;
 
+int Point::nextID = 0;
+
 Point::Point() {};
 
 Point::Point(float x, float y, unsigned int bindex)
@@ -8,6 +10,11 @@ Point::Point(float x, float y, unsigned int bindex)
 	this->x = x;
 	this->y = y;
 	this->bindex = bindex;
+	this->id = ++(this->nextID);
+}
+
+unsigned int Point::get_id() {
+	return this->id;
 }
 
 float Point::get_x() {
