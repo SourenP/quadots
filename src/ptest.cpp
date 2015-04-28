@@ -3,11 +3,15 @@
 using namespace std;
 
 
-void rotate(Point::Point_p d, Control<Point>& c) {
-    d->set_x(d->get_x()+1);
-    d->set_y(d->get_y()+1);
+void rotate(Point::Point_p p, Control<Point>& c) {
+    Point::Point_p n = c.get_nearest(p);
+    if (n != nullptr) {
+        p->set_x(p->get_x() - (p->get_x() - n->get_x())/10);
+        p->set_y(p->get_y() - (p->get_y() - n->get_y())/10);
+    } else {
+        cout << "null?" << endl;
+    }
 }
-
 
 int main()
 {
@@ -22,11 +26,12 @@ int main()
     int b = s->CreateBehavior(circle);
 
     // Create two Points in the middle of the screen facing opposite directions
-    s->CreateElement(200, 200, b);
-    s->CreateElement(200, 200, b);
+    s->CreateElement(Point(100, 100, b));
+    s->CreateElement(Point(200, 200, b));
+    s->CreateElement(Point(300, 300, b));
 
     // Initialize Renderer
-    Renderer<Point> twodee = Renderer<Point>(400,400, 32);
+    Renderer<Point> twodee = Renderer<Point>(400, 400, 12);
 
     // Run Simulation for 200 steps
     s->Run(200, twodee);

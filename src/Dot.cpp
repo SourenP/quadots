@@ -24,3 +24,9 @@ void Dot::set_ang(float ang) {
 void Dot::set_vel(float vel) {
 	this->vel = vel;
 }
+
+void Dot::update() {
+    // Update location based on angle and velocity
+    this->set_x(this->get_x() + cos(this->get_ang() * PI/180.0) * this->get_vel());
+    this->set_y(this->get_y() + sin(this->get_ang() * PI/180.0) * this->get_vel());
+}

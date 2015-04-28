@@ -12,7 +12,7 @@ template <class elem>
 class Renderer
 {
 public:
-	Renderer(int screen_w, int screen_h, int sps);
+	Renderer(int screen_w, int screen_h, float sps);
 	~Renderer();
 
 	bool RenderState(State<elem> &s);
@@ -23,7 +23,7 @@ private:
     SDL_Renderer *renderer;
     SDL_Rect backRect;
 
-    int SPS;
+    float SPS;
     bool quit;
     SDL_Event sdl_e;
 
@@ -34,7 +34,7 @@ private:
 #endif
 
 template <class elem>
-Renderer<elem>::Renderer(int screen_w, int screen_h, int32_t sps)
+Renderer<elem>::Renderer(int screen_w, int screen_h, float sps)
 {
     // Create SDL Window
     SCREEN_WIDTH = screen_w;

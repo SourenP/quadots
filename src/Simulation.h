@@ -1,6 +1,5 @@
 #ifndef Simulation_H
 #define Simulation_H
-#define PI 3.14159265
 
 #include <stdio.h>
 #include <math.h>
@@ -27,11 +26,10 @@ public:
     ~Simulation();
 
     State<elem> curr_state;
-    void CreateElement(float x, float y, int b);
+    void CreateElement(elem e);
     int CreateBehavior(behavior &b);
     void Run(int gen_count);
     void Run(int gen_count, Renderer<elem> &r);
-    float get_distance(const Elem_p a,const Elem_p b);
 
 private:
     Control<elem> *control;
@@ -104,31 +102,18 @@ void Simulation<elem>::UpdateState() {
 }
 
 /*
-void Simulation<elem>::Move(Point::Point_p p) {
-    // Update location based on angle and velocity
-    p->x += cos(p->ang * PI/180.0) * p->vel;
-    p->y += sin(p->ang * PI/180.0) * p->vel;
-}
-*/
-
-/*
     Creates a new Element and returns a smart pointer to it.
 */
 template <class elem>
-void Simulation<elem>::CreateElement(float x, float y, int b) {
-    Elem_p new_element(new elem(x, y, b));
-    curr_state.elements.push_back(new_element);
+void Simulation<elem>::CreateElement(elem e) {
+    Elem_p new_element_p(new elem(e));
+    curr_state.elements.push_back(new_element_p);
 }
 
 template <class elem>
 int Simulation<elem>::CreateBehavior(behavior &b) {
     this->behaviors.push_back(b);
     return (behaviors.size() - 1);
-}
-
-template <class elem>
-float Simulation<elem>::get_distance(const Elem_p a, const Elem_p b) {
-    return sqrt(pow(a->get_x() - b->get_x(),2) + pow(a->get_y() - b->get_y(),2));
 }
 
 template <class elem>
