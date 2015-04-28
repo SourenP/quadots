@@ -6,10 +6,6 @@
 #include "Point.h"
 
 quadtree::quadtree(double x, double y, double width, double height, int level) {
-	if (level == MAX_LEVELS) {
-    		std::cout<<"Error: Can not split quadtree further.\n";
-    		return;
-  	}
 	this->x = x;
 	this->y = y;
 	this->width = width;
@@ -18,14 +14,19 @@ quadtree::quadtree(double x, double y, double width, double height, int level) {
 	this->split = false;
 }
 
+
 quadtree::~quadtree() {
-	delete nodes[0];
-	delete nodes[1];
-	delete nodes[2];
-	delete nodes[3];
+	if (split == true) {
+		delete nodes[0];
+		delete nodes[1];
+		delete nodes[2];
+		delete nodes[3];
+	} 
 }
 
+/*
 void quadtree::pushPoint(Point p) {
+	int result;
 	if (split == true) {		//quadtree has children
 		int index = getIndex(p);	//get appropriate location for Point
 
@@ -39,23 +40,48 @@ void quadtree::pushPoint(Point p) {
 	if (points.size() > MAX_POINTS && level < MAX_LEVELS) {		//if no. of points in parent exceed MAX_POINTS (=1)
 		if (split == false) {		//no children, so split.
 			std::cout<<"splitting because points size= "<<points.size()<<"\n";
-			splitIntoQuads();
+			result = splitIntoQuads();
 		}
 
-		int k = 0;
-		while (k < points.size()) {
-			Point temp = points.back();
-			int index = getIndex(temp);
-			if (index != -1) {
-				points.pop_back();
-				nodes[index]->pushPoint(temp);
-			}
-			else
-				k++;
+		if (result == 1) {
+			int k = 0;
+			while (k < points.size()) {
+				Point temp = points.back();
+				int index = getIndex(temp);
+				if (index != -1) {
+					points.pop_back();
+					nodes[index]->pushPoint(temp);
+				}
+				else
+					k++;
+			}		
 		}
 	}
-}
+}*/
 
+void quadtree::pushPoint(Point p) {
+ 	int result;
+        if (split == true) {            //quadtree has children
+                int index = getIndex(p);        //get appropriate location for Point
+
+                if (index != -1) {
+                        nodes[index]->pushPoint(p);
+                        return;
+                }
+        }
+	if (points.size() < MAX_POINTS) {
+		std::cout<<"Pushing "<<p.x<<","<<p.y<<"\n";
+        	points.push_back(p);    //no children, push to parent
+	}
+	else
+		result = splitIntoQuads();
+	
+	if (result == 1) {
+		int index = getIndex(p);
+		nodes[index]->pushPoint(p);
+	}
+}
+	
 int quadtree::getIndex(Point p) {
 	int index = -1;
 	bool topquad, bottomquad;
@@ -83,16 +109,19 @@ int quadtree::getIndex(Point p) {
 	return index; 
 }
 
-void quadtree::splitIntoQuads() {
+int quadtree::splitIntoQuads() {
 	int newWidth = width/2;
 	int newHeight = height/2;
 	int newLevel = level + 1;
-	nodes[0] = new quadtree(x, y, newWidth, newHeight, newLevel);
-	nodes[1] = new quadtree(x + newWidth, y, newWidth, newHeight, newLevel);
-	nodes[2] = new quadtree(x + newWidth, y + newHeight, newWidth, newHeight, newLevel);
-	nodes[3] = new quadtree(x, y + newHeight, newWidth, newHeight, newLevel);
-
-	split = true;
+	if (newLevel < MAX_LEVELS) {
+		nodes[0] = new quadtree(x, y, newWidth, newHeight, newLevel);
+		nodes[1] = new quadtree(x + newWidth, y, newWidth, newHeight, newLevel);
+		nodes[2] = new quadtree(x + newWidth, y + newHeight, newWidth, newHeight, newLevel);
+		nodes[3] = new quadtree(x, y + newHeight, newWidth, newHeight, newLevel);
+		split = true;
+		return 1;
+	}
+	return 0;		//can't split
 }
 
 void quadtree::clearQuadtree() {
