@@ -19,6 +19,11 @@ float Dot::get_vel() {
 }
 
 void Dot::set_ang(float ang) {
+	if (ang> 360.0) {
+		ang = 360 - ang;
+	} else if (ang < 0) {
+		ang = 360 + ang;
+	}
 	this->ang = ang;
 }
 void Dot::set_vel(float vel) {

@@ -3,29 +3,15 @@
 using namespace std;
 
 
-void reach(Point::Point_p p, Control<Point>& c) {
-    Point::Point_p n = c.get_nearest(p);
-    if (n != nullptr) {
-        p->set_x(p->get_x() - (p->get_x() - n->get_x())/10);
-        p->set_y(p->get_y() - (p->get_y() - n->get_y())/10);
-    } else {
-        cout << "null?" << endl;
-    }
-}
-
-void go(Point::Point_p p, Control<Point>& c) {
-    Point::Point_p n = c.get_nearest(p);
-    if (n != nullptr) {
-        p->set_x(n->get_x());
-    } else {
-        cout << "null?" << endl;
-    }
+void rule1(Point::Point_p p, Control<Point>& c) {
+    p->set_x(p->get_x() + (c.get_ncom_x(p) - p->get_x()) / 100);
+    p->set_y(p->get_y() + (c.get_ncom_y(p) - p->get_y()) / 100);
 }
 
 int main()
 {
     // Brains
-    Simulation<Point>::rule rot = &go;
+    Simulation<Point>::rule rot = &rule1;
     Simulation<Point>::behavior circle = {rot};
 
     // Initialize Simulation
@@ -39,7 +25,7 @@ int main()
     s->CreateElement(Point(300, 300, b));
 
     // Initialize Renderer
-    Renderer<Point> twodee = Renderer<Point>(400, 400, 12);
+    Renderer<Point> twodee = Renderer<Point>(400, 400, 50);
 
     // Run Simulation for 200 steps
     s->Run(200, twodee);

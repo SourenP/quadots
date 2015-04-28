@@ -309,3 +309,23 @@ void quadtree::getNearestNeighbours(quadtree* root) {
 		}
 	}
 }
+
+
+void quadtree::getNearestNeighbours(quadtree root, float rad, Point q) {
+	std::stack<quadtree> s;
+	s.push()
+
+	while(!s.empty()) {
+		quadtree T = s.top();
+		s.pop();
+
+		for(auto C : T.getChildren()) {
+			if C.isLeaf() {
+				// examine points
+			}
+			if C.intersect(rad, q) {
+				s.push(C);
+			}
+		}
+	}
+}

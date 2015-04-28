@@ -24,11 +24,9 @@ State<elem>::State() {};
 template <class elem>
 State<elem>::State(const State<elem>& other)
 {
-	cout << "copy time" << endl;
 	if (this != &other) // protect against invalid self-assignment
 	{
 		elements.clear();
-		cout << elements.size() << endl;
 		for(auto e : other.elements) {
 			shared_ptr<elem> new_element_p(new elem(*e));
     		elements.push_back(new_element_p);

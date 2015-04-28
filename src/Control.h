@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <vector>
+#include <math.h>
 #include <iostream>
 #include "Point.h"
 #include "State.h"
@@ -17,6 +18,12 @@ public:
     float get_distance(const Elem_p a,const Elem_p b);
     Elem_p get_nearest(const Elem_p a);
     float get_avgY();
+    float get_com_x();
+    float get_com_y();
+    float get_ncom_x(const Elem_p a);
+	float get_ncom_y(const Elem_p a);
+	float get_avg_d(const Elem_p a);
+	float dir_towards(float x, float y); 
 
     void setState(State<elem> *s);
 private:
@@ -60,6 +67,56 @@ shared_ptr<elem> Control<elem>::get_nearest(const shared_ptr<elem> a) {
 		}
 	}
 	return nearest_e;
+}
+
+template <class elem>
+float Control<elem>::get_com_x() {
+	float sum;
+	for(auto e : state->elements) {
+		sum += e->get_x();
+	}
+	return sum/state->elements.size();
+}
+
+template <class elem>
+float Control<elem>::get_com_y() {
+	float sum;
+	for(auto e : state->elements) {
+		sum += e->get_y();
+	}
+	return sum/state->elements.size();
+}
+
+template <class elem>
+float Control<elem>::get_ncom_x(const Elem_p a) {
+	float sum;
+	for(auto e : state->elements)
+		if(e->get_id() != a->get_id())
+			sum += e->get_x();
+	return sum/(state->elements.size()-1);
+}
+
+template <class elem>
+float Control<elem>::get_ncom_y(const Elem_p a) {
+	float sum;
+	for(auto e : state->elements)
+		if(e->get_id() != a->get_id())
+			sum += e->get_y();
+	return sum/(state->elements.size()-1);
+}
+
+template <class elem>
+float Control<elem>::get_avg_d(const Elem_p a) {
+	float sum;
+	for(auto e : state->elements)
+		if(e->get_id() != a->get_id())
+			sum += e->get_ang();
+	return sum/(state->elements.size()-1);
+}
+
+template <class elem>
+float Control<elem>::dir_towards(float x, float y) {
+	return atan(x/y);
 }
 
 template <class elem>
