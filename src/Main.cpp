@@ -3,29 +3,30 @@
 using namespace std;
 
 
-void rotate(Point::Point_p p, Control& c) {
-    p->ang += 2;
+void rotate(Point::Point_p d, Control<Point>& c) {
+    d->set_x(d->get_x()+1);
+    d->set_y(d->get_y()+1);
 }
 
 
 int main()
 {
     // Brains
-    Simulation::rule rot = &rotate;
-    Simulation::behavior circle = {rot};
+    Simulation<Point>::rule rot = &rotate;
+    Simulation<Point>::behavior circle = {rot};
 
     // Initialize Simulation
-    Simulation *s = new Simulation();
+    Simulation<Point> *s = new Simulation<Point>();
 
     // Create behavior circle
     int b = s->CreateBehavior(circle);
 
     // Create two Points in the middle of the screen facing opposite directions
-    s->CreatePoint(200, 200, 0, 1, b);
-    s->CreatePoint(200, 200, 180, 2, b);
+    s->CreateElement(200, 200, b);
+    s->CreateElement(200, 200, b);
 
     // Initialize Renderer
-    Renderer twodee = Renderer(400,400, 32);
+    Renderer<Point> twodee = Renderer<Point>(400,400, 32);
 
     // Run Simulation for 200 steps
     s->Run(200, twodee);
