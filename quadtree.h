@@ -13,6 +13,9 @@ Each level can not have more than 4 nodes. */
 #define MAX_LEVELS 10
 #define MAX_POINTS 1
 #define MAX_NODES 4
+#define RADIUS 70
+
+//std::vector<Point> neighboursList; 
 
 class quadtree {
 public:
@@ -27,9 +30,9 @@ public:
 
   	void pushPoint(Point p);
 	void clearQuadtree();	
-	int traverseTree(quadtree* q, Point p);
+	int traverseTree(Point p);
 	quadtree traverseTree(quadtree* q, int level);
-	std::vector<Point> getNearestNeighbours(Point p);
+	void getNearestNeighbours(quadtree* root);
 	void traverseTree();
 
 private:
