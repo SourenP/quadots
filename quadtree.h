@@ -10,7 +10,7 @@ Each level will consist of a vector of Points.
 The quadtree library will also have pointer to its parent node and 4 children nodes. 
 Each level can not have more than 4 nodes. */
 
-#define MAX_LEVELS 3
+#define MAX_LEVELS 10
 #define MAX_POINTS 1
 #define MAX_NODES 4
 
@@ -38,7 +38,7 @@ private:
   	std::vector<Point> points;
 
 	int getIndex(Point p);
-	void splitIntoQuads();
+	int splitIntoQuads();
 	int findPoint(quadtree* q, Point p);
 	double getDistance(Point p1, Point p2);
 	std::vector<Point> getPointsAtLevel(int level);

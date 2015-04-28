@@ -12,79 +12,50 @@ quadtree::quadtree(double x, double y, double width, double height, int level) {
 	this->height = height;
 	this->level = level;
 	this->split = false;
+
+	this->nodes[0] = NULL;
+	this->nodes[1] = NULL;
+	this->nodes[2] = NULL;
+	this->nodes[3] = NULL;
 }
 
 
 quadtree::~quadtree() {
-	if (split == true) {
-		delete nodes[0];
-		delete nodes[1];
-		delete nodes[2];
-		delete nodes[3];
-	} 
+	if (this->nodes[0] != NULL) delete this->nodes[0];
+	if (this->nodes[1] != NULL) delete this->nodes[1];
+	if (this->nodes[2] != NULL) delete this->nodes[2];
+	if (this->nodes[3] != NULL) delete this->nodes[3];
 }
 
-/*
 void quadtree::pushPoint(Point p) {
 	int result;
-	if (split == true) {		//quadtree has children
-		int index = getIndex(p);	//get appropriate location for Point
+	if (points.size() < MAX_POINTS) {
+		points.push_back(p);
+		return;
+	}
 
+	if (nodes[0] != NULL) {
+		int index = getIndex(p);
 		if (index != -1) {
-			nodes[index]->pushPoint(p);
+			this->nodes[index]->pushPoint(p);
 			return;
 		}
 	}
-	points.push_back(p);	//no children, push to parent
-	
-	if (points.size() > MAX_POINTS && level < MAX_LEVELS) {		//if no. of points in parent exceed MAX_POINTS (=1)
-		if (split == false) {		//no children, so split.
-			std::cout<<"splitting because points size= "<<points.size()<<"\n";
-			result = splitIntoQuads();
-		}
 
-		if (result == 1) {
-			int k = 0;
-			while (k < points.size()) {
-				Point temp = points.back();
-				int index = getIndex(temp);
-				if (index != -1) {
-					points.pop_back();
-					nodes[index]->pushPoint(temp);
-				}
-				else
-					k++;
-			}		
-		}
-	}
-}*/
-
-void quadtree::pushPoint(Point p) {
- 	int result;
-        if (split == true) {            //quadtree has children
-                int index = getIndex(p);        //get appropriate location for Point
-
-                if (index != -1) {
-                        nodes[index]->pushPoint(p);
-                        return;
-                }
-        }
-	if (points.size() < MAX_POINTS) {
-		std::cout<<"Pushing "<<p.x<<","<<p.y<<"\n";
-        	points.push_back(p);    //no children, push to parent
-	}
-	else
+	if (nodes[0] == NULL) {
 		result = splitIntoQuads();
-	
-	if (result == 1) {
 		int index = getIndex(p);
-		nodes[index]->pushPoint(p);
+		if (index != -1) {
+			this->nodes[index]->pushPoint(p);
+			return;
+		}
 	}
 }
 	
 int quadtree::getIndex(Point p) {
 	int index = -1;
 	bool topquad, bottomquad;
+	topquad = bottomquad = false;
 
 	double verMidpoint = this->x + 0.5*this->width;
 	double horMidpoint = this->y + 0.5*this->height;
@@ -106,6 +77,7 @@ int quadtree::getIndex(Point p) {
 		else if (p.x < verMidpoint)
 			index = 3;
 	}
+
 	return index; 
 }
 
@@ -140,14 +112,15 @@ void quadtree::clearQuadtree() {
 }
 
 int quadtree::traverseTree(quadtree* q, Point p) {
+	std::cout<<"Inside traverse tree ugh..\n";
 	int found = -1;
-	if (split == false) {		//calling node has no children
+	if (q->nodes[0] == NULL) {		//calling node has no children
 		if (this->x == p.x && this->y == p.y)
 			return this->level; 
 		else
 			return -1;	//point not found
 	}
-	else if (split == true) {
+	else if (nodes[0] != NULL) {	//calling nodes has children
 		found = traverseTree(nodes[0], p);
 		if (found == -1)
 			found = traverseTree(nodes[1], p);
@@ -181,7 +154,7 @@ quadtree quadtree::traverseTree(quadtree* q, int level) {
 std::vector<Point> quadtree::getNearestNeighbours(Point p) {
 	int level = traverseTree(this, p);
 	std::vector<Point> nearest_points;
-
+/*
 	if (level != -1)
 		nearest_points = getPointsAtLevel(level - 1);
 	else
@@ -206,7 +179,8 @@ std::vector<Point> quadtree::getNearestNeighbours(Point p) {
 			break;
 	}
 	
-	return fin_neighbours;
+	return fin_neighbours; */
+	return nearest_points;
 }
 
 std::vector<Point> quadtree::getPointsAtLevel(int level) {
@@ -232,15 +206,16 @@ double quadtree::getDistance(Point p1, Point p2) {
 
 /* Use this function for testing */
 void quadtree::traverseTree() {
-	if (split != true) {
+	if (this->nodes[0] == NULL) {
 		for (int i = 0; i < this->points.size(); i++)
 			std::cout<<"At level "<<this->level<<", we have: "<<points[i].x<<","<<points[i].y<<"\n";
 		return;
 	}
-	else {
-		this->nodes[0]->traverseTree();
-		this->nodes[1]->traverseTree();
-		this->nodes[2]->traverseTree();
-		this->nodes[3]->traverseTree();
-	}
+	for (int i = 0; i < this->points.size(); i++)
+		std::cout<<"At level "<<this->level<<", we have: "<<points[i].x<<","<<points[i].y<<"\n";
+
+	this->nodes[0]->traverseTree();
+	this->nodes[1]->traverseTree();
+	this->nodes[2]->traverseTree();
+	this->nodes[3]->traverseTree();
 }
