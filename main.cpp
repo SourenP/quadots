@@ -19,6 +19,8 @@ int main() {
 	q.pushPoint(p6);
 	
 	q.traverseTree();
+
+	std::vector<Point> temp = q.getNearestNeighbours(p5);
 	//q.clearQuadtree();
 
 	return 0;

@@ -112,14 +112,15 @@ void quadtree::clearQuadtree() {
 }
 
 int quadtree::traverseTree(quadtree* q, Point p) {
+	std::cout<<"Inside traverse tree ugh..\n";
 	int found = -1;
-	if (split == false) {		//calling node has no children
+	if (q->nodes[0] == NULL) {		//calling node has no children
 		if (this->x == p.x && this->y == p.y)
 			return this->level; 
 		else
 			return -1;	//point not found
 	}
-	else if (split == true) {
+	else if (nodes[0] != NULL) {	//calling nodes has children
 		found = traverseTree(nodes[0], p);
 		if (found == -1)
 			found = traverseTree(nodes[1], p);
@@ -153,7 +154,7 @@ quadtree quadtree::traverseTree(quadtree* q, int level) {
 std::vector<Point> quadtree::getNearestNeighbours(Point p) {
 	int level = traverseTree(this, p);
 	std::vector<Point> nearest_points;
-
+/*
 	if (level != -1)
 		nearest_points = getPointsAtLevel(level - 1);
 	else
@@ -178,7 +179,8 @@ std::vector<Point> quadtree::getNearestNeighbours(Point p) {
 			break;
 	}
 	
-	return fin_neighbours;
+	return fin_neighbours; */
+	return nearest_points;
 }
 
 std::vector<Point> quadtree::getPointsAtLevel(int level) {
