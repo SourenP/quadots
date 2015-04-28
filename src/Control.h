@@ -8,13 +8,14 @@
 #include "State.h"
 using namespace std;
 
+template <class elem>
 class Control
 {
 public:
-    Control(State *s);
+    Control(State<elem> *s);
     float get_avgY();
 private:
-	State *state;
+	State<elem> *state;
 };
 
 #endif

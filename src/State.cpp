@@ -1,14 +1,17 @@
 #include "State.h"
 using namespace std;
 
-State::State() {};
+template <class elem>
+State<elem>::State() {};
 
-ostream& operator<<(ostream &os, const State& s)
+/*
+ostream& operator<<(ostream &os, const State<elem>& s)
 {
 	os << "[\n";
-	for (Point::Point_p p : s.points)
-		os << "\t(" << p->x << ", " << p->y << ")\n";
+	for (shared_ptr<elem> p : s.elements)
+		os << "\t(" << p->get_x() << ", " << p->get_y() << ")\n";
 	os << "]\n";
 
 	return os;
 }
+*/

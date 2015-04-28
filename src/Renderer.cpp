@@ -1,7 +1,8 @@
 #include "Renderer.h"
 using namespace std;
 
-Renderer::Renderer(int screen_w, int screen_h, int32_t sps)
+template <class elem>
+Renderer<elem>::Renderer(int screen_w, int screen_h, int32_t sps)
 {
     // Create SDL Window
     SCREEN_WIDTH = screen_w;
@@ -25,7 +26,8 @@ Renderer::Renderer(int screen_w, int screen_h, int32_t sps)
 /*
     Loops over all points and draws them.
 */
-bool Renderer::RenderState(State &s) {
+template <class elem>
+bool Renderer<elem>::RenderState(State<elem> &s) {
     while (SDL_PollEvent(&sdl_e)) {
         if (sdl_e.type == SDL_QUIT){
             return true;
@@ -37,19 +39,19 @@ bool Renderer::RenderState(State &s) {
     DrawBackground();
 
     // Draw points
-    for (Point::Point_p p : s.points) {
+    for (auto p : s.points) {
         // note: deal with out of bounds x/y later
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         
-        SDL_RenderDrawPoint(renderer, p->x-1, p->y);
-        SDL_RenderDrawPoint(renderer, p->x, p->y-1);
-        SDL_RenderDrawPoint(renderer, p->x-1, p->y-1);
-        SDL_RenderDrawPoint(renderer, p->x+1, p->y);
-        SDL_RenderDrawPoint(renderer, p->x, p->y+1);
-        SDL_RenderDrawPoint(renderer, p->x+1, p->y+1);
-        SDL_RenderDrawPoint(renderer, p->x+1, p->y-1);
-        SDL_RenderDrawPoint(renderer, p->x-1, p->y+1);
-        SDL_RenderDrawPoint(renderer, p->x, p->y);
+        SDL_RenderDrawPoint(renderer, p->get_x()-1, p->get_y());
+        SDL_RenderDrawPoint(renderer, p->get_x(), p->get_y()-1);
+        SDL_RenderDrawPoint(renderer, p->get_x()-1, p->get_y()-1);
+        SDL_RenderDrawPoint(renderer, p->get_x()+1, p->get_y());
+        SDL_RenderDrawPoint(renderer, p->get_x(), p->get_y()+1);
+        SDL_RenderDrawPoint(renderer, p->get_x()+1, p->get_y()+1);
+        SDL_RenderDrawPoint(renderer, p->get_x()+1, p->get_y()-1);
+        SDL_RenderDrawPoint(renderer, p->get_x()-1, p->get_y()+1);
+        SDL_RenderDrawPoint(renderer, p->get_x(), p->get_y());
     }
 
     // Cleanup
@@ -62,16 +64,19 @@ bool Renderer::RenderState(State &s) {
 /*
     Draws a white background using a rectangle.
 */
-void Renderer::DrawBackground() {
+template <class elem>
+void Renderer<elem>::DrawBackground() {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderFillRect(renderer, &backRect);
 }
 
-void Renderer::logSDLError(ostream &os, const string &msg) {
+template <class elem>
+void Renderer<elem>::logSDLError(ostream &os, const string &msg) {
     os << msg << " error: " << SDL_GetError() << endl;
 }
 
-Renderer::~Renderer()
+template <class elem>
+Renderer<elem>::~Renderer()
 {
     // Destroy window
     SDL_DestroyRenderer(renderer);

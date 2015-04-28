@@ -1,14 +1,16 @@
 #include "Simulation.h"
 using namespace std;
 
-Simulation::Simulation() {
-    control = new Control(&curr_state);
+template <class elem>
+Simulation<elem>::Simulation() {
+    control = new Control<elem>(&curr_state);
 }
 
 /*
-    Updates and prints Points @gen_count times.
+    Updates and prints Elements @gen_count times.
 */
-void Simulation::Run(int gen_count) {
+template <class elem>
+void Simulation<elem>::Run(int gen_count) {
     // Update and print
     if (gen_count == 0)
         while (true) {
@@ -23,9 +25,10 @@ void Simulation::Run(int gen_count) {
 }
 
 /*
-    Updates and renders Points @gen_count times.
+    Updates and renders Elements @gen_count times.
 */
-void Simulation::Run(int gen_count, Renderer &r) {
+template <class elem>
+void Simulation<elem>::Run(int gen_count, Renderer<elem> &r) {
     bool quit = false;
     // Update and draw
     if (gen_count == 0)
@@ -43,48 +46,56 @@ void Simulation::Run(int gen_count, Renderer &r) {
 }
 
 /*
-    Calculates new position of Points.
+    Calculates new position of Elements.
 */
-void Simulation::UpdateState() {
-    for (Point::Point_p p : curr_state.points) {
-        if (p->bindex > behaviors.size()) {
-            logError(cerr, "Behavior index out of range: " + to_string(p->bindex));
+template <class elem>
+void Simulation<elem>::UpdateState() {
+    for (Elem_p p : curr_state.elements) {
+        if (p->get_b() > behaviors.size()) {
+            logError(cerr, "Behavior index out of range.");
             return;
         }
-        for (rule r : behaviors[p->bindex])
+        for (rule r : behaviors[p->get_b()])
             r(p, *control);
-        Move(p);
+        p->update();
     }
 }
 
-void Simulation::Move(Point::Point_p p) {
+/*
+void Simulation<elem>::Move(Point::Point_p p) {
     // Update location based on angle and velocity
     p->x += cos(p->ang * PI/180.0) * p->vel;
     p->y += sin(p->ang * PI/180.0) * p->vel;
 }
+*/
 
 /*
-    Creates a new Point and returns a smart pointer to it.
+    Creates a new Element and returns a smart pointer to it.
 */
-void Simulation::CreatePoint(float x, float y, float ang, float vel, int b) {
-    Point::Point_p new_point(new Point(x, y, ang, vel, b));
-    curr_state.points.push_back(new_point);
+template <class elem>
+void Simulation<elem>::CreateElement(float x, float y, int b) {
+    Elem_p new_element(new elem(x, y, b));
+    curr_state.elements.push_back(new_element);
 }
 
-int Simulation::CreateBehavior(behavior &b) {
+template <class elem>
+int Simulation<elem>::CreateBehavior(behavior &b) {
     this->behaviors.push_back(b);
     return (behaviors.size() - 1);
 }
 
-float Simulation::get_distance(const Point::Point_p a, const Point::Point_p b) {
-    return sqrt(pow(a->x - b->x,2) + pow(a->y - b->y,2));
+template <class elem>
+float Simulation<elem>::get_distance(const Elem_p a, const Elem_p b) {
+    return sqrt(pow(a->get_x() - b->get_x(),2) + pow(a->get_y() - b->get_y(),2));
 }
 
-void Simulation::logError(ostream &os, const string &msg) {
+template <class elem>
+void Simulation<elem>::logError(ostream &os, const string &msg) {
     os << " error: " << msg << endl;
 }
 
-Simulation::~Simulation()
+template <class elem>
+Simulation<elem>::~Simulation()
 {
     delete control;
 }

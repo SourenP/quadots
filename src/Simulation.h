@@ -11,32 +11,35 @@
 #include "State.h"
 #include "Renderer.h"
 #include "Control.h"
+#include "Dot.h"
 
 using namespace std;
 
-class Simulation
+template <class elem>
+class  Simulation
 {
 public:
-    typedef void (*rule)(Point::Point_p, Control&);
+    typedef shared_ptr<elem> Elem_p;
+    typedef void (*rule)(Elem_p, Control<elem>&);
     typedef vector<rule> behavior;
 
     Simulation();
     ~Simulation();
 
-    State curr_state;
-    void CreatePoint(float x, float y, float ang, float vel, int b);
+    State<elem> curr_state;
+    void CreateElement(float x, float y, int b);
     int CreateBehavior(behavior &b);
     void Run(int gen_count);
-    void Run(int gen_count, Renderer &r);
-    float get_distance(const Point::Point_p a,const Point::Point_p b);
+    void Run(int gen_count, Renderer<elem> &r);
+    float get_distance(const Elem_p a,const Elem_p b);
 
 private:
-    Control *control;
+    Control<elem> *control;
     vector<behavior> behaviors;
     void UpdateState();
-    void Move(Point::Point_p p);
-    void DrawPoints();
+    void DrawElements();
     void logError(ostream &os, const string &msg);
 };
 
 #endif
+

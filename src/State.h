@@ -3,16 +3,16 @@
 
 #include <stdio.h>
 #include <vector>
+#include <memory>
 #include <iostream>
-#include "Point.h"
 using namespace std;
 
-class State
+template <class elem> class State
 {
 public:
     State();
-    friend ostream& operator<<(ostream &os, const State& s);
-    vector<Point::Point_p> points;
+    //friend ostream& operator<<(ostream &os, const State<elem>& s);
+    vector<shared_ptr<elem>> elements;
 private:
 };
 

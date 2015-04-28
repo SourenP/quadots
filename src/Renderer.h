@@ -8,13 +8,14 @@
 #include "State.h"
 using namespace std;
 
+template <class elem>
 class Renderer
 {
 public:
 	Renderer(int screen_w, int screen_h, int sps);
 	~Renderer();
 
-	bool RenderState(State &s);
+	bool RenderState(State<elem> &s);
 private:
     int SCREEN_WIDTH;
     int SCREEN_HEIGHT;
