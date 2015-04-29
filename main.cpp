@@ -1,29 +1,26 @@
 #include <iostream>
-#include "quadtree.h"
+#include "quadtree2.h"
 
 int main() {
-	quadtree q(0,0,100,100,0);
-	quadtree* root = &q;
+	quadtree2 q(0,0,100,100,0);
 	Point p1(10,10);
 	Point p2(70,70);
 	Point p3(10,70);
 	Point p4(70,10);
-	Point p5(80,10);
-	Point p6(70,80);
 
-	q.pushPoint(p1);
-	q.pushPoint(p2);
-	q.pushPoint(p3);
-	q.pushPoint(p4); 
+	q.insert(p1);
+	//q.insert(p2);
+	//q.insert(p3);
+	//q.insert(p4); 
 	//q.pushPoint(p5);
 	//q.pushPoint(p6);
 	
-	//q.traverseTree();
+	q.traverseTree();
 
-	std::cout<<"Done traversal. Now looking for neighbours.....\n";
+	//std::cout<<"Done traversal. Now looking for neighbours.....\n";
 
 
-	q.getNearestNeighbours(root);
+	//q.getNearestNeighbours(root);
 	//std::vector<Point> temp = q.getNearestNeighbours(p2);
 	
 	//std::cout<<"size= "<<temp.size()<<"\n";

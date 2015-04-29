@@ -23,7 +23,7 @@ public:
     float get_ncom_x(const Elem_p a);
 	float get_ncom_y(const Elem_p a);
 	float get_avg_d(const Elem_p a);
-	float dir_towards(float x, float y); 
+	float dir_towards(const Elem_p a, float x, float y); 
 
     void setState(State<elem> *s);
 private:
@@ -115,8 +115,10 @@ float Control<elem>::get_avg_d(const Elem_p a) {
 }
 
 template <class elem>
-float Control<elem>::dir_towards(float x, float y) {
-	return atan(x/y);
+float Control<elem>::dir_towards(const Elem_p a, float x, float y) {
+	float ratio = (y - a->get_y()) / (x - a->get_x());
+	float ang = atan(ratio) * 180.0 / M_PI;
+	return (a->get_x() <= x) ? ang : (ang +180);
 }
 
 template <class elem>
