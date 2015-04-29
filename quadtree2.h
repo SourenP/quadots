@@ -9,6 +9,7 @@
 #include <SDL2/SDL.h>
 #include <cstddef>
 #include <iostream>
+#include <stack>
 #include "Point.h"  //include Point library made by Souren
 
 /* Quadtree will consist of levels which will have a certain width and height and a number associated.
@@ -16,17 +17,21 @@ Each level will consist of a vector of Points.
 The quadtree library will also have pointer to its parent node and 4 children nodes. 
 Each level can not have more than 4 nodes. */
 
-#define MAX_LEVELS 5
-#define MAX_OBJECTS 5
+#define MAX_LEVELS 100
+#define MAX_OBJECTS 1
 
 using namespace std;
 
 class quadtree2 {
 public:
-    quadtree2(int plevel, double x, double y, double width, double height);  //constructor
+    quadtree2(int plevel, double x, double y, double width, double height);
+    ~quadtree2();
     void insert(Point p);
-    void clear();
+    //void clear();
     void traverseTree();
+    void retrieve(vector<Point>& robjects, Point p);
+    vector<Point> getNearestNeighbours(float rad, pair<float, float> c);
+    bool isLeaf();
 
 private:
 
@@ -35,12 +40,12 @@ private:
     int level;
     double width;
     double height;
-    vector<quadtree2> nodes;
+    vector<quadtree2*> nodes;
     vector<Point> objects;
 
     void split();
+    bool intersects(double radius, pair<float, float> c);
     int getIndex(Point p);
-    vector<Point> retrieve(vector<Point> robjects, Point p);
 };
 
 #endif

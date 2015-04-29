@@ -2,32 +2,27 @@
 #include "quadtree2.h"
 
 int main() {
-	quadtree2 q(0,0,100,100,0);
+	quadtree2 q(0,0,0,100,100);
 	Point p1(10,10);
-	Point p2(70,70);
+	Point p2(40,40);
 	Point p3(10,70);
 	Point p4(70,10);
+	Point p5(80, 80);
+	Point p6(70, 70);
 
 	q.insert(p1);
-	//q.insert(p2);
-	//q.insert(p3);
-	//q.insert(p4); 
-	//q.pushPoint(p5);
-	//q.pushPoint(p6);
+	q.insert(p2);
+	q.insert(p3);
+	q.insert(p4); 
+	q.insert(p5);
+	q.insert(p6);
 	
-	q.traverseTree();
+	vector<Point> babies = q.getNearestNeighbours(36, make_pair(25,25));
+	//q.retrieve(babies, p1);
 
-	//std::cout<<"Done traversal. Now looking for neighbours.....\n";
-
-
-	//q.getNearestNeighbours(root);
-	//std::vector<Point> temp = q.getNearestNeighbours(p2);
+	for(Point p : babies)
+		 cout << p.x << " " << p.y << endl;
 	
-	//std::cout<<"size= "<<temp.size()<<"\n";
-	//for (int i = 0; i < temp.size(); i++)
-	//	std::cout<<temp[i].x<<","<<temp[i].y<<"\n";
-	
-	//q.clearQuadtree();
-
+	//q.traverseTree();
 	return 0;
 }
