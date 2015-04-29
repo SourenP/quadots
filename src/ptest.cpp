@@ -1,5 +1,6 @@
 #include <iostream>
-#include "Simulation.h"
+#include "Point.h"
+#include "Simulation.cpp"
 using namespace std;
 
 void rule1(Point::Point_p p, Control<Point>& c) {
@@ -24,10 +25,10 @@ int main()
     s->CreateElement(Point(300, 300, b));
 
     // Initialize Renderer
-    Renderer<Point> twodee = Renderer<Point>(400, 400, 50);
+    //Renderer<Point> twodee = Renderer<Point>(400, 400, 50);
 
     // Run Simulation for 200 steps
-    s->Run(200, twodee);
+    s->Run(200);
 
     delete s;
     return 0;

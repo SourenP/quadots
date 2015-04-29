@@ -11,15 +11,15 @@ LDLIBS  = -L../include -lSDL2
 
 point_test = ptest
 dot_test = dtest
-objects = dtest.o ptest.o Point.o Dot.o
+objects = dtest.o ptest.o Point.o Dot.o Quadtree.o Simulation.o Renderer.o Control.o State.o
 
 point_test: $(point_test)
-$(point_test): ptest.o Point.o Dot.o
+$(point_test): ptest.o Point.o Dot.o Quadtree.o Simulation.o Renderer.o Control.o State.o
 
 dot_test: $(dot_test)
-$(dot_test): dtest.o Point.o Dot.o
+$(dot_test): dtest.o Point.o Dot.o Quadtree.o Simulation.o Renderer.o Control.o State.o
 
-$(objects): Simulation.h Point.h State.h Renderer.h Control.h Dot.h Quadtree.h
+$(objects): Point.h Dot.h 
 
 .PHONY: clean
 clean:
