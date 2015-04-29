@@ -36,14 +36,18 @@ private:
     void UpdateState();
     void DrawElements();
     void logError(ostream &os, const string &msg);
+    float sim_width;
+    float sim_height;
 };
 
 // CPP
 
 template <class elem>
 Simulation<elem>::Simulation(double width, double height) {
-    curr_state = new State<elem>(width, height);
-    control = new Control<elem>(curr_state);
+    this->sim_width = width;
+    this->sim_height = height;
+    this->curr_state = new State<elem>(width, height);
+    this->control = new Control<elem>(curr_state);
 }
 
 /*
@@ -90,16 +94,22 @@ void Simulation<elem>::Run(int gen_count, Renderer<elem> &r) {
 */
 template <class elem>
 void Simulation<elem>::UpdateState() {
-    vector<Elem_p> elements = curr_state->get_elements();
-    for (Elem_p p : elements) {
-        if (p->get_b() > behaviors.size()) {
+    vector<Elem_p> curr_elements = curr_state->get_elements();
+    State<elem> *new_state = new State<elem>(sim_width, sim_height);
+    for (Elem_p p : curr_elements) {
+        Elem_p new_p(new elem(*p));
+        if (new_p->get_b() > behaviors.size()) {
             logError(cerr, "Behavior index out of range.");
             return;
         }
-        for (rule r : behaviors[p->get_b()])
-            r(p, *control);
-        p->update();
+        for (rule r : behaviors[new_p->get_b()])
+            r(new_p, *control);
+        new_p->update();
+        new_state->add(new_p);
     }
+    delete curr_state;
+    curr_state = new_state;
+    control->setState(curr_state);
 }
 
 /*
@@ -124,7 +134,7 @@ void Simulation<elem>::logError(ostream &os, const string &msg) {
 
 template <class elem>
 Simulation<elem>::~Simulation()
-{
+{   
     delete curr_state;
     delete control;
 }

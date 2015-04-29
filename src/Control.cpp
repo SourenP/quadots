@@ -118,7 +118,7 @@ float Control<elem>::get_distance(const Elem_p a, const Elem_p b) const {
 
 template <class elem>
 vector<shared_ptr<elem>> Control<elem>::qneighbors(shared_ptr<elem> a, float range) {
-	return state->get_neighbors(a->x, a->y, range);
+	return state->get_neighbors(a, range);
 }
 
 /*

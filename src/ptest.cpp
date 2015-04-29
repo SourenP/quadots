@@ -4,7 +4,8 @@
 using namespace std;
 
 void rule1(Point::Point_p p, Control<Point>& c) {
-    p->set_x(p->get_x()+1);
+    vector<Point::Point_p> elements = c.qneighbors(p, 400);
+    p->set_x(elements[0]->get_x());
 }
 
 int main()
@@ -25,7 +26,7 @@ int main()
     s->CreateElement(Point(300, 300, b));
 
     // Initialize Renderer
-    //Renderer<Point> twodee = Renderer<Point>(400, 400, 50);
+    //Renderer<Point> twodee = Renderer<Point>(400, 400, 1);
 
     // Run Simulation for 200 steps
     s->Run(200);

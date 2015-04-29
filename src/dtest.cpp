@@ -46,10 +46,10 @@ int main()
     s->CreateElement(Dot(200, 200, 180, 1, b1));
 
     // Initialize Renderer
-    Renderer<Dot> twodee = Renderer<Dot>(400,400, 24);
+    //Renderer<Dot> twodee = Renderer<Dot>(400,400, 24);
 
     // Run Simulation for 200 steps
-    s->Run(500, twodee);
+    s->Run(500);
 
     delete s;
     return 0;

@@ -11,11 +11,11 @@ using namespace std;
 template <class elem> 
 class State {
 public:
-    State(double width, double height);
+    State(float width, float height);
     //State(const State<elem>& other);
     ~State();
     const vector<shared_ptr<elem>> get_elements() const;
-    const vector<shared_ptr<elem>> get_neighbors(float x, float y, float radius) const;
+    const vector<shared_ptr<elem>> get_neighbors(shared_ptr<elem> p, float radius) const;
     void add(shared_ptr<elem> p);
     Quadtree<shared_ptr<elem>> *elemTree;
 private:
@@ -24,7 +24,7 @@ private:
 // CPP
 
 template <class elem>
-State<elem>::State(double width, double height) {
+State<elem>::State(float width, float height) {
 	elemTree = new Quadtree<shared_ptr<elem>>(0, 0, width, height);
 }
 
@@ -41,8 +41,8 @@ const vector<shared_ptr<elem>> State<elem>::get_elements() const {
 }
 
 template <class elem>
-const vector<shared_ptr<elem>> State<elem>::get_neighbors(float x, float y, float radius) const {
-	return elemTree->getNearestNeighbours(make_pair(x,y), radius);
+const vector<shared_ptr<elem>> State<elem>::get_neighbors(shared_ptr<elem> p, float radius) const {
+	return elemTree->getNearestNeighbours(p, radius);
 }
 
 template <class elem>
