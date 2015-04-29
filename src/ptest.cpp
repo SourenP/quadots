@@ -2,20 +2,19 @@
 #include "Simulation.h"
 using namespace std;
 
-
 void rule1(Point::Point_p p, Control<Point>& c) {
-    p->set_x(p->get_x() + (c.get_ncom_x(p) - p->get_x()) / 100);
-    p->set_y(p->get_y() + (c.get_ncom_y(p) - p->get_y()) / 100);
+    p->set_x(p->get_x()+1);
 }
 
 int main()
 {
+
     // Brains
     Simulation<Point>::rule rot = &rule1;
     Simulation<Point>::behavior circle = {rot};
 
     // Initialize Simulation
-    Simulation<Point> *s = new Simulation<Point>();
+    Simulation<Point> *s = new Simulation<Point>(400,400);
 
     // Create behavior circle
     int b = s->CreateBehavior(circle);

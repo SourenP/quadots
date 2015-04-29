@@ -71,7 +71,8 @@ bool Renderer<elem>::RenderState(State<elem> &s) {
     DrawBackground();
 
     // Draw elements
-    for (auto p : s.elements) {
+    vector<shared_ptr<elem>> elements = s.get_elements();
+    for (auto p : elements) {
         // note: deal with out of bounds x/y later
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         

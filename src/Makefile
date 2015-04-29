@@ -19,7 +19,7 @@ $(point_test): ptest.o Point.o Dot.o
 dot_test: $(dot_test)
 $(dot_test): dtest.o Point.o Dot.o
 
-$(objects): Simulation.h Point.h State.h Renderer.h Control.h Dot.h
+$(objects): Simulation.h Point.h State.h Renderer.h Control.h Dot.h Quadtree.h
 
 .PHONY: clean
 clean:

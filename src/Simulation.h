@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <SDL2/SDL.h>
 #include <cstddef>
+#include "Quadtree.h"
 #include "Point.h"
 #include "State.h"
 #include "Renderer.h"
@@ -22,10 +23,10 @@ public:
     typedef void (*rule)(Elem_p, Control<elem>&);
     typedef vector<rule> behavior;
 
-    Simulation();
+    Simulation(double width, double height);
     ~Simulation();
 
-    State<elem> curr_state;
+    State<elem> *curr_state;
     void CreateElement(elem e);
     int CreateBehavior(behavior &b);
     void Run(int gen_count);
@@ -42,8 +43,9 @@ private:
 // CPP
 
 template <class elem>
-Simulation<elem>::Simulation() {
-    control = new Control<elem>(&curr_state);
+Simulation<elem>::Simulation(double width, double height) {
+    curr_state = new State<elem>(width, height);
+    control = new Control<elem>(curr_state);
 }
 
 /*
@@ -74,13 +76,13 @@ void Simulation<elem>::Run(int gen_count, Renderer<elem> &r) {
     if (gen_count == 0)
         while (true) {
             UpdateState();
-            quit = r.RenderState(curr_state);
+            quit = r.RenderState(*curr_state);
             if (quit) return;
         }
     else
         for(int i=0; i < gen_count; i++) {
             UpdateState();
-            quit = r.RenderState(curr_state);
+            quit = r.RenderState(*curr_state);
             if (quit) return;
         }
 }
@@ -90,8 +92,8 @@ void Simulation<elem>::Run(int gen_count, Renderer<elem> &r) {
 */
 template <class elem>
 void Simulation<elem>::UpdateState() {
-    State<elem> new_state = curr_state;
-    for (Elem_p p : new_state.elements) {
+    vector<Elem_p> elements = curr_state->get_elements();
+    for (Elem_p p : elements) {
         if (p->get_b() > behaviors.size()) {
             logError(cerr, "Behavior index out of range.");
             return;
@@ -100,7 +102,6 @@ void Simulation<elem>::UpdateState() {
             r(p, *control);
         p->update();
     }
-    curr_state = new_state;
 }
 
 /*
@@ -109,7 +110,7 @@ void Simulation<elem>::UpdateState() {
 template <class elem>
 void Simulation<elem>::CreateElement(elem e) {
     Elem_p new_element_p(new elem(e));
-    curr_state.elements.push_back(new_element_p);
+    curr_state->add(new_element_p);
 }
 
 template <class elem>
@@ -126,6 +127,7 @@ void Simulation<elem>::logError(ostream &os, const string &msg) {
 template <class elem>
 Simulation<elem>::~Simulation()
 {
+    delete curr_state;
     delete control;
 }
 

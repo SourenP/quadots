@@ -17,14 +17,6 @@ quadtree2::quadtree2(int pLevel, double x, double y, double width, double height
 }
 
 /*
-void quadtree2::clear() {
-    for(quadtree2* n : nodes) {
-        delete n;
-    }
-}
-*/
-
-/*
  * Splits the node into 4 subnodes
  */
  void quadtree2::split() {

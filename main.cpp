@@ -23,6 +23,6 @@ int main() {
 	for(Point p : babies)
 		 cout << p.x << " " << p.y << endl;
 	
-	//q.traverseTree();
+	q.traverseTree();
 	return 0;
 }

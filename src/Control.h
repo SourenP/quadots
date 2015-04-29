@@ -15,15 +15,15 @@ class Control
 public:
 	typedef shared_ptr<elem> Elem_p;
     Control(State<elem> *s);
-    float get_distance(const Elem_p a,const Elem_p b);
-    Elem_p get_nearest(const Elem_p a);
-    float get_avgY();
-    float get_com_x();
-    float get_com_y();
-    float get_ncom_x(const Elem_p a);
-	float get_ncom_y(const Elem_p a);
-	float get_avg_d(const Elem_p a);
-	float dir_towards(const Elem_p a, float x, float y); 
+    //float get_distance(const Elem_p a,const Elem_p b);
+    //Elem_p get_nearest(const Elem_p a);
+    //float get_avgY();
+    //float get_com_x();
+    //float get_com_y();
+    //float get_ncom_x(const Elem_p a);
+	//float get_ncom_y(const Elem_p a);
+	//float get_avg_d(const Elem_p a);
+	//float dir_towards(const Elem_p a, float x, float y); 
 
     void setState(State<elem> *s);
 private:
@@ -31,7 +31,6 @@ private:
 };
 
 // CPP
-
 template <class elem>
 Control<elem>::Control(State<elem> *s)
 {
@@ -43,6 +42,7 @@ void Control<elem>::setState(State<elem> *s) {
 	this->state = s;
 }
 
+/*
 template <class elem>
 float Control<elem>::get_avgY() {
 	float sum = 0;
@@ -125,5 +125,5 @@ template <class elem>
 float Control<elem>::get_distance(const Elem_p a, const Elem_p b) {
     return sqrt(pow(a->get_x() - b->get_x(),2) + pow(a->get_y() - b->get_y(),2));
 }
-
+*/
 #endif

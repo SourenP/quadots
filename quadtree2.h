@@ -27,7 +27,6 @@ public:
     quadtree2(int plevel, double x, double y, double width, double height);
     ~quadtree2();
     void insert(Point p);
-    //void clear();
     void traverseTree();
     void retrieve(vector<Point>& robjects, Point p);
     vector<Point> getNearestNeighbours(float rad, pair<float, float> c);
