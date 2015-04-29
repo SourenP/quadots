@@ -12,28 +12,34 @@ void tocom(Dot::Dot_p p, Control<Dot>& c) {
 void align(Dot::Dot_p p, Control<Dot>& c) {
     p->set_ang(p->get_ang() + ((c.get_avg_d(p) - p->get_ang()) / 50));
 }
+*/
 
 void cohesion(Dot::Dot_p p, Control<Dot>& c) {
     p->set_ang(c.dir_towards(p, 200, 0));
     cout << p->get_ang() << endl;
 }
-*/
 
-void stop(Dot::Dot_p p, Control<Dot>& c) {
+
+void rotate(Dot::Dot_p p, Control<Dot>& c) {
     p->set_ang(p->get_ang() + 2);
 }
 
 int main()
 {
     // Brains
-    Simulation<Dot>::rule r2 = &stop;
-    Simulation<Dot>::behavior empty = {r2};
+    //Simulation<Dot>::rule r1 = &cohesion;
+    //Simulation<Dot>::rule r2 = &align;
+    //Simulation<Dot>::rule r3 = &seperation;
+    //Simulation<Dot>::behavior boid = {r1,r2,r3};
+
+    Simulation<Dot>::rule r1 = &rotate;
+    Simulation<Dot>::behavior circle = {r1};
 
     // Initialize Simulation
     Simulation<Dot> *s = new Simulation<Dot>(400, 400);
 
     // Create behavior circle
-    int b1 = s->CreateBehavior(empty);
+    int b1 = s->CreateBehavior(circle);
 
     // Create two Points in the middle of the screen facing opposite directions
     s->CreateElement(Dot(200, 200, 0, 1, b1));

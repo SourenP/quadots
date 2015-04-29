@@ -13,16 +13,25 @@ class Control
 {
 public:
 	typedef shared_ptr<elem> Elem_p;
+
     Control(State<elem> *s);
-    //float get_distance(const Elem_p a,const Elem_p b);
-    //Elem_p get_nearest(const Elem_p a);
-    //float get_avgY();
-    //float get_com_x();
-    //float get_com_y();
-    //float get_ncom_x(const Elem_p a);
-	//float get_ncom_y(const Elem_p a);
-	//float get_avg_d(const Elem_p a);
-	//float dir_towards(const Elem_p a, float x, float y); 
+
+    float get_distance(const Elem_p a,const Elem_p b) const;
+
+    float com_x() const;
+    float com_x(const vector<Elem_p> elements) const;
+
+    float com_y() const;
+    float com_y(const vector<Elem_p> elements) const;
+
+	float avg_dir() const;
+	float avg_dir(const vector<Elem_p> elements) const;
+
+	float dir_towards(const Elem_p a, float x, float y) const;
+
+	vector<Elem_p> qneighbors(Elem_p a, float range);
+
+	//vector<Elem_p> neighbors(const Elem_p a, float range) const;
 
     void setState(State<elem> *s);
 private:
@@ -41,18 +50,81 @@ void Control<elem>::setState(State<elem> *s) {
 	this->state = s;
 }
 
-/*
 template <class elem>
-float Control<elem>::get_avgY() {
-	float sum = 0;
-	for(auto e : state->elements) {
-		sum += e->get_y();
-	}
+float Control<elem>::com_x() const {
+	float sum;
+	vector<Elem_p> elements = state->get_elements();
+	for(auto e : elements)
+		sum += e->get_x();
 	return sum/state->elements.size();
 }
 
 template <class elem>
-shared_ptr<elem> Control<elem>::get_nearest(const shared_ptr<elem> a) {
+float Control<elem>::com_x(const vector<Elem_p> elements) const {
+	float sum;
+	for(auto e : elements)
+		sum += e->get_x();
+	return sum/state->elements.size();
+}
+
+template <class elem>
+float Control<elem>::com_y() const {
+	float sum;
+	vector<Elem_p> elements = state->get_elements();
+	for(auto e : elements)
+		sum += e->get_y();
+	return sum/state->elements.size();
+}
+
+template <class elem>
+float Control<elem>::com_y(const vector<Elem_p> elements) const {
+	float sum;
+	for(auto e : elements)
+		sum += e->get_y();
+	return sum/state->elements.size();
+}
+
+
+template <class elem>
+float Control<elem>::avg_dir() const {
+	float sum;
+	vector<Elem_p> elements = state->get_elements();
+	for(auto e : elements)
+		sum += e->get_ang();
+	return sum/(elements.size());
+}
+
+template <class elem>
+float Control<elem>::avg_dir(const vector<Elem_p> elements) const {
+	float sum;
+	for(auto e : elements)
+		sum += e->get_ang();
+	return sum/(elements.size());
+}
+
+
+template <class elem>
+float Control<elem>::dir_towards(const Elem_p a, float x, float y) const {
+	float ratio = (y - a->get_y()) / (x - a->get_x());
+	float ang = atan(ratio) * 180.0 / M_PI;
+	return (a->get_x() <= x) ? ang : (ang +180);
+}
+
+template <class elem>
+float Control<elem>::get_distance(const Elem_p a, const Elem_p b) const {
+    return sqrt(pow(a->get_x() - b->get_x(),2) + pow(a->get_y() - b->get_y(),2));
+}
+
+
+template <class elem>
+vector<shared_ptr<elem>> Control<elem>::qneighbors(shared_ptr<elem> a, float range) {
+	return state->get_neighbors(a->x, a->y, range);
+}
+
+/*
+/// REWRITE TO GET ALL IN RADIUS
+template <class elem>
+Elem_p Control<elem>::get_nearest(const shared_ptr<elem> a) {
 	float dist = -1;
 	float curr_dist;
 	shared_ptr<elem> nearest_e = nullptr;
@@ -67,62 +139,6 @@ shared_ptr<elem> Control<elem>::get_nearest(const shared_ptr<elem> a) {
 	}
 	return nearest_e;
 }
-
-template <class elem>
-float Control<elem>::get_com_x() {
-	float sum;
-	for(auto e : state->elements) {
-		sum += e->get_x();
-	}
-	return sum/state->elements.size();
-}
-
-template <class elem>
-float Control<elem>::get_com_y() {
-	float sum;
-	for(auto e : state->elements) {
-		sum += e->get_y();
-	}
-	return sum/state->elements.size();
-}
-
-template <class elem>
-float Control<elem>::get_ncom_x(const Elem_p a) {
-	float sum;
-	for(auto e : state->elements)
-		if(e->get_id() != a->get_id())
-			sum += e->get_x();
-	return sum/(state->elements.size()-1);
-}
-
-template <class elem>
-float Control<elem>::get_ncom_y(const Elem_p a) {
-	float sum;
-	for(auto e : state->elements)
-		if(e->get_id() != a->get_id())
-			sum += e->get_y();
-	return sum/(state->elements.size()-1);
-}
-
-template <class elem>
-float Control<elem>::get_avg_d(const Elem_p a) {
-	float sum;
-	for(auto e : state->elements)
-		if(e->get_id() != a->get_id())
-			sum += e->get_ang();
-	return sum/(state->elements.size()-1);
-}
-
-template <class elem>
-float Control<elem>::dir_towards(const Elem_p a, float x, float y) {
-	float ratio = (y - a->get_y()) / (x - a->get_x());
-	float ang = atan(ratio) * 180.0 / M_PI;
-	return (a->get_x() <= x) ? ang : (ang +180);
-}
-
-template <class elem>
-float Control<elem>::get_distance(const Elem_p a, const Elem_p b) {
-    return sqrt(pow(a->get_x() - b->get_x(),2) + pow(a->get_y() - b->get_y(),2));
-}
 */
+
 #endif

@@ -13,19 +13,19 @@ Point::Point(float x, float y, unsigned int bindex)
 	this->id = ++(this->nextID);
 }
 
-unsigned int Point::get_id() {
+unsigned int Point::get_id() const {
 	return this->id;
 }
 
-float Point::get_x() {
+float Point::get_x() const {
 	return this->x;
 }
 
-float Point::get_y() {
+float Point::get_y() const {
 	return this->y;
 }
 
-unsigned int Point::get_b() {
+unsigned int Point::get_b() const {
 	return this->bindex;
 }
 

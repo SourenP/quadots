@@ -14,7 +14,8 @@ public:
     State(double width, double height);
     //State(const State<elem>& other);
     ~State();
-    vector<shared_ptr<elem>> get_elements();
+    const vector<shared_ptr<elem>> get_elements() const;
+    const vector<shared_ptr<elem>> get_neighbors(float x, float y, float radius) const;
     void add(shared_ptr<elem> p);
     Quadtree<shared_ptr<elem>> *elemTree;
 private:
@@ -33,10 +34,15 @@ State<elem>::~State() {
 }
 
 template <class elem>
-vector<shared_ptr<elem>> State<elem>::get_elements() {
+const vector<shared_ptr<elem>> State<elem>::get_elements() const {
 	vector<shared_ptr<elem>> elements;
 	elemTree->get_elements(elements);
 	return elements;
+}
+
+template <class elem>
+const vector<shared_ptr<elem>> State<elem>::get_neighbors(float x, float y, float radius) const {
+	return elemTree->getNearestNeighbours(make_pair(x,y), radius);
 }
 
 template <class elem>

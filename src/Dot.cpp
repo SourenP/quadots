@@ -10,11 +10,11 @@ Dot::Dot(float x, float y, float ang, float vel, unsigned int bindex)
 	this->vel = vel;
 }
 
-float Dot::get_ang() {
+float Dot::get_ang() const{
 	return this->ang;
 }
 
-float Dot::get_vel() {
+float Dot::get_vel() const{
 	return this->vel;
 }
 

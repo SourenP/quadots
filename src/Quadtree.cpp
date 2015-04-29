@@ -32,11 +32,11 @@ public:
     Quadtree(double x, double y, double width, double height);
     ~Quadtree();
     void insert(elem p);
-    void traverseTree();
-    void get_elements(vector<elem>& robjects);
-    void retrieve(vector<elem>& robjects, elem p);
-    vector<elem> getNearestNeighbours(float rad, pair<float, float> c);
-    bool isLeaf();
+    void traverseTree() const;
+    void get_elements(vector<elem>& robjects) const;
+    void get_roommates(vector<elem>& robjects, elem p) const;
+    const vector<elem> getNearestNeighbours(pair<float, float> c, float rad) const;
+    bool isLeaf() const;
 
 private:
     double x;
@@ -49,8 +49,8 @@ private:
 
     Quadtree(int plevel, double x, double y, double width, double height);
     void split();
-    bool intersects(double radius, pair<float, float> c);
-    int getIndex(elem p);
+    bool intersects(double radius, pair<float, float> c) const;
+    int getIndex(elem p) const;
 };
 
 // CPP
@@ -98,7 +98,7 @@ Quadtree<elem>::Quadtree(int pLevel, double x, double y, double width, double he
  * of the parent node
  */
  template <class elem>
- int Quadtree<elem>::getIndex(elem p) {
+ int Quadtree<elem>::getIndex(elem p) const{
     int index = -1;
 
     double verMidpoint = this->x + 0.5*this->width;
@@ -147,10 +147,10 @@ void Quadtree<elem>::insert(elem p) {
 }
 
 template <class elem>
-void Quadtree<elem>::retrieve(vector<elem>& robjects, elem p) {
+void Quadtree<elem>::get_roommates(vector<elem>& robjects, elem p) const{
     int index = getIndex(p);
     if (nodes.size()) {
-        nodes[index]->retrieve(robjects, p);
+        nodes[index]->get_roommates(robjects, p);
     }
 
     for(elem p : objects) {
@@ -160,7 +160,7 @@ void Quadtree<elem>::retrieve(vector<elem>& robjects, elem p) {
 
 /* Use this function for testing */
 template <class elem>
-void Quadtree<elem>::traverseTree() {
+void Quadtree<elem>::traverseTree() const{
     for(elem p : objects)
         cout << p->get_x() << " " << p->get_y() << " at level " << level << endl;
 
@@ -170,7 +170,7 @@ void Quadtree<elem>::traverseTree() {
 
 /* Use this function for testing */
 template <class elem>
-void Quadtree<elem>::get_elements(vector<elem>& robjects) {
+void Quadtree<elem>::get_elements(vector<elem>& robjects) const{
     for(elem p : objects)
         robjects.push_back(p);
     for(Quadtree<elem>* n : nodes)
@@ -178,7 +178,7 @@ void Quadtree<elem>::get_elements(vector<elem>& robjects) {
 }
 
 template <class elem>
-bool Quadtree<elem>::intersects(double rad, pair<float, float> c) {
+bool Quadtree<elem>::intersects(double rad, pair<float, float> c) const{
     pair<float, float> topLeft(this->x, this->y); 
     pair<float, float> botLeft(this->x, this->y + this->height);
     pair<float, float> topRight(this->x + this->width, this->y);
@@ -193,7 +193,7 @@ bool Quadtree<elem>::intersects(double rad, pair<float, float> c) {
 }
 
 template <class elem>
-vector<elem> Quadtree<elem>::getNearestNeighbours(float rad, pair<float, float> c) {
+const vector<elem> Quadtree<elem>::getNearestNeighbours(pair<float, float> c, float rad) const{
     stack<Quadtree<elem>*> s;
     vector<elem> neighbors;
     s.push(this);
@@ -226,7 +226,7 @@ vector<elem> Quadtree<elem>::getNearestNeighbours(float rad, pair<float, float> 
 }
 
 template <class elem>
-bool Quadtree<elem>::isLeaf() {
+bool Quadtree<elem>::isLeaf() const {
     return !nodes.size(); 
 }
 

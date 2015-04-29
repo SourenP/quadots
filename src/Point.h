@@ -15,10 +15,10 @@ class Point
         Point();
         Point(float x, float y, unsigned int bindex);
 
-        unsigned int get_id();
-        float get_x();
-        float get_y();
-        unsigned int get_b();
+        unsigned int get_id() const;
+        float get_x() const;
+        float get_y() const;
+        unsigned int get_b() const;
 
         void set_x(float x);
         void set_y(float y);
