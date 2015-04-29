@@ -22,8 +22,8 @@ int main() {
 
 	std::cout<<"Done traversal. Now looking for neighbours.....\n";
 
-
-	q.getNearestNeighbours(root);
+	double radius = 50;
+	q.getNearestNeighbours(*root, radius, p2 );
 	//std::vector<Point> temp = q.getNearestNeighbours(p2);
 	
 	//std::cout<<"size= "<<temp.size()<<"\n";
