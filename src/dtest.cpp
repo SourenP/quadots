@@ -1,6 +1,7 @@
 #include <iostream>
+#include "Point.h"
 #include "Dot.h"
-#include "Simulation.cpp"
+#include "Simulation.h"
 #include <cmath>
 using namespace std;
 
@@ -18,8 +19,8 @@ void separation(Dot::Dot_p p, Control<Dot>& c) {
     float steps = 10;
 
     if(neighbors.size()) {
-        float avg_x = c.com_x(neighbors);
-        float avg_y = c.com_y(neighbors);
+        float avg_x = c.avg_x(neighbors);
+        float avg_y = c.avg_y(neighbors);
         float goal_dir = c.dir_towards(p, avg_x, avg_y) - 180;
         float step_ang = delta_dir(p->get_ang(), goal_dir, steps);
         p->add_ang(step_ang);
@@ -42,8 +43,8 @@ void cohesion(Dot::Dot_p p, Control<Dot>& c) {
     float steps = 10;
 
     if(neighbors.size()) {
-        float avg_x = c.com_x(neighbors);
-        float avg_y = c.com_y(neighbors);
+        float avg_x = c.avg_x(neighbors);
+        float avg_y = c.avg_y(neighbors);
         float goal_dir = c.dir_towards(p, avg_x, avg_y);
         float step_ang = delta_dir(p->get_ang(), goal_dir, steps);
         p->add_ang(step_ang);
@@ -81,7 +82,7 @@ int main()
     s->CreateRandDots(100, 10, 790, 10, 790, b1);
 
     // Initialize Renderer
-    Renderer<Dot> twodee = Renderer<Dot>(1000, 1000, 100);
+    Renderer<Dot> twodee = Renderer<Dot>(800, 800, 100);
 
     // Run Simulation for 1000 steps
     s->Run(5000, twodee);

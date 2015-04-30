@@ -1,5 +1,5 @@
-#ifndef DOT_H
-#define DOT_H
+#ifndef DOT_H_INCLUDED
+#define DOT_H_INCLUDED
 #define PI 3.14159265
 
 #include "Point.h"
@@ -14,6 +14,7 @@ class Dot: public Point
         typedef shared_ptr<Dot> Dot_p;
 
         Dot(float x, float y, float ang, float vel, unsigned int bindex);
+
         float get_ang() const;
         float get_vel() const;
 

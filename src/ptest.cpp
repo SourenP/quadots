@@ -1,15 +1,12 @@
 #include <iostream>
 #include "Point.h"
-#include "Simulation.cpp"
+#include "Simulation.h"
 #include <stdlib.h>
 #include <time.h>
 using namespace std;
 
 void random_move(Point::Point_p p, Control<Point>& c) {
-    vector<Point::Point_p> elements = c.qneighbors(p, 250);
-    cout << elements.size() << endl;
-    //p->set_x(c.random_pos(0,800));
-    //p->set_y(c.random_pos(0,800));
+    p->set_x(p->get_x() + 2);
 }
 
 int main()
@@ -28,17 +25,10 @@ int main()
     // Create two Points in the middle of the screen facing opposite directions
     s->CreateElement(Point(100, 100, b));
     s->CreateElement(Point(100, 300, b));
-    //s->CreateRandElements(100, 10, 800, 10, 800, b);
 
-    // Run this only for testing logic (NOT FOR MEASURE)
-    Renderer<Point> twodee = Renderer<Point>(800, 800, 1);
-    s->Run(20, twodee);
-
-    // Run this for measure
-    //int step = 100;
-    // Start timing
-    //s->Run(step);
-    // End timing
+    // Run simulation
+    //Renderer<Point> twodee = Renderer<Point>(800, 800, 50);
+    s->Run(1000, true);
 
     delete s;
     return 0;
