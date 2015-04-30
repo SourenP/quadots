@@ -81,16 +81,16 @@ Quadtree<elem>::Quadtree(int pLevel, float x, float y, float width, float height
 /*
  * Splits the node into 4 subnodes
  */
- template <class elem>
- void Quadtree<elem>::split() {
-   float subWidth = (this->width / 2);
-   float subHeight = (this->height / 2);
- 
-   nodes.push_back(new Quadtree<elem>(level+1, x + subWidth, y, subWidth, subHeight));
-   nodes.push_back(new Quadtree<elem>(level+1, x, y, subWidth, subHeight));
-   nodes.push_back(new Quadtree<elem>(level+1, x, y + subHeight, subWidth, subHeight));
-   nodes.push_back(new Quadtree<elem>(level+1, x + subWidth, y + subHeight, subWidth, subHeight));
- }
+template <class elem>
+void Quadtree<elem>::split() {
+    float subWidth = (this->width / 2);
+    float subHeight = (this->height / 2);
+
+    nodes.push_back(new Quadtree<elem>(level+1, x, y, subWidth, subHeight));
+    nodes.push_back(new Quadtree<elem>(level+1, x + subWidth, y, subWidth, subHeight));
+    nodes.push_back(new Quadtree<elem>(level+1, x + subWidth, y + subHeight, subWidth, subHeight));
+    nodes.push_back(new Quadtree<elem>(level+1, x, y + subHeight, subWidth, subHeight));
+}
 
 /*
  * Determine which node the object belongs to. -1 means
@@ -127,7 +127,7 @@ Quadtree<elem>::Quadtree(int pLevel, float x, float y, float width, float height
 template <class elem>
 void Quadtree<elem>::insert(elem p) {
     // If tree is already split
-    if (nodes.size()) {
+    if (!this->isLeaf()) {
         // get which node to put into
         int index = getIndex(p);
         // insert into that node
@@ -179,17 +179,23 @@ void Quadtree<elem>::get_elements(vector<elem>& robjects) const {
 
 template <class elem>
 bool Quadtree<elem>::intersects(float rad, elem c) {
-    pair<float, float> topLeft(this->x, this->y); 
-    pair<float, float> botLeft(this->x, this->y + this->height);
-    pair<float, float> topRight(this->x + this->width, this->y);
-    pair<float, float> botRight(this->x + this->width, this->y + this->height);
+    pair<float, float> P1(this->x, this->y); 
+    pair<float, float> P2(this->x + this->width, this->y + this->height);
+    pair<float, float> P3(c->get_x()-rad, c->get_y()-rad); 
+    pair<float, float> P4(c->get_x()+rad, c->get_y()+rad);
 
-    if(get_distance(topLeft.first, topLeft.second, c->get_x(), c->get_y()) < rad ||
-        get_distance(botLeft.first, botLeft.second, c->get_x(), c->get_y()) < rad ||
-        get_distance(topRight.first, topRight.second, c->get_x(), c->get_y()) < rad ||
-        get_distance(botRight.first, botRight.second, c->get_x(), c->get_y()) < rad)
-        return true;
-    return false;
+    float rect_a_right = P2.first;
+    float rect_a_left = P1.first;
+    float rect_a_top = P2.second;
+    float rect_a_bot = P1.second;
+
+    float rect_b_right = P4.first;
+    float rect_b_left = P3.first;
+    float rect_b_top = P4.second;
+    float rect_b_bot = P3.second;
+    
+    bool seperate = rect_a_right < rect_b_left || rect_a_left > rect_b_right || rect_a_top < rect_b_bot || rect_a_bot > rect_b_top;
+    return !seperate;
 }
 
 template <class elem>
@@ -204,16 +210,14 @@ vector<elem> Quadtree<elem>::getNearestNeighbours(elem c, float rad) {
 
         if (T->isLeaf()) {
             for (elem p : T->objects) {
-                //if((p->get_id() != c->get_id()) && (get_distance(p->get_x(), p->get_y(), c->get_x(), c->get_y()) < rad))
-                if(get_distance(p->get_x(), p->get_y(), c->get_x(), c->get_y()) < rad)
+                if((p->get_id() != c->get_id()) && (get_distance(p->get_x(), p->get_y(), c->get_x(), c->get_y()) < rad))
                     neighbors.push_back(p);
             }
         } else {
             for(Quadtree<elem> *C : T->nodes) {
                 if (C->isLeaf()) {
                     for (elem p : C->objects) {
-                        //if((p->get_id() != c->get_id()) && (get_distance(p->get_x(), p->get_y(), c->get_x(), c->get_y()) < rad))
-                        if(get_distance(p->get_x(), p->get_y(), c->get_x(), c->get_y()) < rad)
+                        if((p->get_id() != c->get_id()) && (get_distance(p->get_x(), p->get_y(), c->get_x(), c->get_y()) < rad))
                             neighbors.push_back(p);
                     }
                 } else if (C->intersects(rad, c)) {
