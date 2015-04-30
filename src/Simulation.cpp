@@ -28,7 +28,8 @@ public:
 
     State<elem> *curr_state;
     void CreateElement(elem e);
-    void CreateRandElements(int count, int min_x, int max_x, int min_y, int max_y, int bindex);
+    void CreateRandPoints(int count, int min_x, int max_x, int min_y, int max_y, int bindex);
+    void CreateRandDots(int count, int min_x, int max_x, int min_y, int max_y, int bindex);
     int CreateBehavior(behavior &b);
     void Run(int gen_count);
     void Run(int gen_count, Renderer<elem> &r);
@@ -127,7 +128,7 @@ void Simulation<elem>::CreateElement(elem e) {
 }
 
 template <class elem>
-void Simulation<elem>::CreateRandElements(int count, int min_x, int max_x, int min_y, int max_y, int bindex) {
+void Simulation<elem>::CreateRandPoints(int count, int min_x, int max_x, int min_y, int max_y, int bindex) {
     srand(time(NULL));
     for(int i=0; i < count; i++) {
         float x = (float) (rand() % max_x + min_x);
@@ -136,6 +137,18 @@ void Simulation<elem>::CreateRandElements(int count, int min_x, int max_x, int m
         curr_state->add(new_element_p);
     }
 }
+
+template <class elem>
+void Simulation<elem>::CreateRandDots(int count, int min_x, int max_x, int min_y, int max_y, int bindex) {
+    srand(time(NULL));
+    for(int i=0; i < count; i++) {
+        float x = (float) (rand() % max_x + min_x);
+        float y = (float) (rand() % max_y + min_y);
+        Elem_p new_element_p(new elem(x,y,0,1,bindex));
+        curr_state->add(new_element_p);
+    }
+}
+
 
 template <class elem>
 int Simulation<elem>::CreateBehavior(behavior &b) {
