@@ -5,7 +5,7 @@ int Point::nextID = 0;
 
 Point::Point() {};
 
-Point::Point(float x, float y, unsigned int bindex)
+Point::Point(float x, float y, int bindex)
 {
 	this->x = x;
 	this->y = y;
@@ -13,7 +13,7 @@ Point::Point(float x, float y, unsigned int bindex)
 	this->id = ++(this->nextID);
 }
 
-unsigned int Point::get_id() const {
+int Point::get_id() const {
 	return this->id;
 }
 
@@ -25,7 +25,7 @@ float Point::get_y() const {
 	return this->y;
 }
 
-unsigned int Point::get_b() const {
+int Point::get_b() const {
 	return this->bindex;
 }
 
@@ -36,7 +36,7 @@ void Point::set_y(float y) {
 	this->y = y;
 }
 
-void Point::set_b(unsigned int bindex) {
+void Point::set_b(int bindex) {
 	this->bindex = bindex;
 }
 

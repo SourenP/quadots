@@ -2,6 +2,8 @@
 #define Simulation_H
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include <math.h>
 #include <cstdint>
 #include <SDL2/SDL.h>
@@ -26,6 +28,7 @@ public:
 
     State<elem> *curr_state;
     void CreateElement(elem e);
+    void CreateRandElements(int count, int min_x, int max_x, int min_y, int max_y, int bindex);
     int CreateBehavior(behavior &b);
     void Run(int gen_count);
     void Run(int gen_count, Renderer<elem> &r);
@@ -59,12 +62,12 @@ void Simulation<elem>::Run(int gen_count) {
     if (gen_count == 0)
         while (true) {
             UpdateState();
-            cout << *curr_state << endl;
+            //cout << *curr_state << endl;
         }
     else
         for(int i=0; i < gen_count; i++) {
             UpdateState();
-            cout << *curr_state << endl;
+            //cout << *curr_state << endl;
         }
 }
 
@@ -98,12 +101,14 @@ void Simulation<elem>::UpdateState() {
     State<elem> *new_state = new State<elem>(sim_width, sim_height);
     for (Elem_p p : curr_elements) {
         Elem_p new_p(new elem(*p));
-        if (new_p->get_b() > behaviors.size()) {
-            logError(cerr, "Behavior index out of range.");
-            return;
+        if (new_p->get_b() >= 0) {
+            if (new_p->get_b() > behaviors.size()) {
+                logError(cerr, "Behavior index out of range.");
+                return;
+            } 
+                for (rule r : behaviors[new_p->get_b()])
+                    r(new_p, *control);
         }
-        for (rule r : behaviors[new_p->get_b()])
-            r(new_p, *control);
         new_p->update();
         new_state->add(new_p);
     }
@@ -119,6 +124,17 @@ template <class elem>
 void Simulation<elem>::CreateElement(elem e) {
     Elem_p new_element_p(new elem(e));
     curr_state->add(new_element_p);
+}
+
+template <class elem>
+void Simulation<elem>::CreateRandElements(int count, int min_x, int max_x, int min_y, int max_y, int bindex) {
+    srand(time(NULL));
+    for(int i=0; i < count; i++) {
+        float x = (float) (rand() % max_x + min_x);
+        float y = (float) (rand() % max_y + min_y);
+        Elem_p new_element_p(new elem(x,y,bindex));
+        curr_state->add(new_element_p);
+    }
 }
 
 template <class elem>

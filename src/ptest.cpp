@@ -12,24 +12,23 @@ int main()
 {
 
     // Brains
-    Simulation<Point>::rule rot = &rule1;
-    Simulation<Point>::behavior circle = {rot};
+    //Simulation<Point>::rule rot = &rule1;
+    //Simulation<Point>::behavior circle = {rot};
 
     // Initialize Simulation
-    Simulation<Point> *s = new Simulation<Point>(400,400);
+    Simulation<Point> *s = new Simulation<Point>(800, 800);
 
     // Create behavior circle
-    int b = s->CreateBehavior(circle);
+    //int b = s->CreateBehavior(circle);
 
     // Create two Points in the middle of the screen facing opposite directions
-    s->CreateElement(Point(100, 100, b));
-    s->CreateElement(Point(300, 300, b));
+    s->CreateRandElements(10, 0, 800, 0, 800, -1);
 
     // Initialize Renderer
-    //Renderer<Point> twodee = Renderer<Point>(400, 400, 1);
+    Renderer<Point> twodee = Renderer<Point>(800, 800, 1);
 
     // Run Simulation for 200 steps
-    s->Run(200);
+    s->Run(200, twodee);
 
     delete s;
     return 0;

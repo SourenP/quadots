@@ -13,22 +13,22 @@ class Point
         typedef shared_ptr<Point> Point_p;
 
         Point();
-        Point(float x, float y, unsigned int bindex);
+        Point(float x, float y, int bindex);
 
-        unsigned int get_id() const;
+        int get_id() const;
         float get_x() const;
         float get_y() const;
-        unsigned int get_b() const;
+        int get_b() const;
 
         void set_x(float x);
         void set_y(float y);
-        void set_b(unsigned int bindex);
+        void set_b(int bindex);
 
         void update();
     private:
         float x;
         float y;
-        unsigned int bindex;
+        int bindex;
         unsigned id;
 };
 
