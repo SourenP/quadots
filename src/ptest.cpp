@@ -6,7 +6,9 @@
 using namespace std;
 
 void random_move(Point::Point_p p, Control<Point>& c) {
-    p->set_x(p->get_x() + 2);
+    vector<Point::Point_p> elements = c.qneighbors(p, 50);
+    p->set_x(c.random_pos(0,800));
+    p->set_y(c.random_pos(0,800));
 }
 
 int main()
@@ -27,8 +29,8 @@ int main()
     s->CreateElement(Point(100, 300, b));
 
     // Run simulation
-    //Renderer<Point> twodee = Renderer<Point>(800, 800, 50);
-    s->Run(1000, true);
+    Renderer<Point> twodee = Renderer<Point>(800, 800, 1);
+    s->Run(1000, twodee);
 
     delete s;
     return 0;
