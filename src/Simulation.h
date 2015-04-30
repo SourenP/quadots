@@ -30,6 +30,7 @@ public:
     int CreateBehavior(behavior &b);
     void Run(int gen_count);
     void Run(int gen_count, Renderer<elem> &r);
+    void CreateRandElements(int count, int min_x, int max_x, int min_y, int max_y, int bindex);
 
 private:
     Control<elem> *control;
@@ -110,6 +111,17 @@ template <class elem>
 void Simulation<elem>::CreateElement(elem e) {
     Elem_p new_element_p(new elem(e));
     curr_state.elements.push_back(new_element_p);
+}
+
+template <class elem>
+void Simulation<elem>::CreateRandElements(int count, int min_x, int max_x, int min_y, int max_y, int bindex) {
+    srand(time(NULL));
+    for(int i=0; i < count; i++) {
+        float x = (float) (rand() % max_x + min_x);
+        float y = (float) (rand() % max_y + min_y);
+        Elem_p new_element_p(new elem(x,y,bindex));
+        curr_state.elements.push_back(new_element_p);
+    }
 }
 
 template <class elem>

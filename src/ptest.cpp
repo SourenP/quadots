@@ -1,34 +1,41 @@
 #include <iostream>
+#include "Point.h"
 #include "Simulation.h"
+#include <stdlib.h>
+#include <time.h>
 using namespace std;
 
-
-void rule1(Point::Point_p p, Control<Point>& c) {
-    p->set_x(p->get_x() + (c.get_ncom_x(p) - p->get_x()) / 100);
-    p->set_y(p->get_y() + (c.get_ncom_y(p) - p->get_y()) / 100);
+void random_move(Point::Point_p p, Control<Point>& c) {
+    vector<Point::Point_p> elements = c.neighbors(p, 50);
+    p->set_x(c.random_pos(0,800));
+    p->set_y(c.random_pos(0,800));
 }
 
 int main()
 {
+
     // Brains
-    Simulation<Point>::rule rot = &rule1;
-    Simulation<Point>::behavior circle = {rot};
+    Simulation<Point>::rule move = &random_move;
+    Simulation<Point>::behavior pattern = {move};
 
     // Initialize Simulation
     Simulation<Point> *s = new Simulation<Point>();
 
     // Create behavior circle
-    int b = s->CreateBehavior(circle);
+    int b = s->CreateBehavior(pattern);
 
     // Create two Points in the middle of the screen facing opposite directions
-    s->CreateElement(Point(100, 100, b));
-    s->CreateElement(Point(300, 300, b));
+    s->CreateRandElements(100, 10, 800, 10, 800, b);
 
-    // Initialize Renderer
-    Renderer<Point> twodee = Renderer<Point>(400, 400, 50);
+    // Run this only for testing logic (NOT FOR MEASURE)
+    Renderer<Point> twodee = Renderer<Point>(800, 800, 1);
+    s->Run(20, twodee);
 
-    // Run Simulation for 200 steps
-    s->Run(200, twodee);
+    // Run this for measure
+    //int step = 100;
+    // Start timing
+    //s->Run(step);
+    // End timing
 
     delete s;
     return 0;
