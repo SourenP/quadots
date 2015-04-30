@@ -2,7 +2,8 @@
 #include "Point.h"
 #include "Simulation.h"
 #include <stdlib.h>
-#include <time.h>
+#include <chrono>
+#include <ctime>
 using namespace std;
 
 void random_move(Point::Point_p p, Control<Point>& c) {
@@ -12,9 +13,7 @@ void random_move(Point::Point_p p, Control<Point>& c) {
 }
 
 int main()
-{
-
-    // Brains
+{   // Brains
     Simulation<Point>::rule move = &random_move;
     Simulation<Point>::behavior pattern = {move};
 
@@ -25,18 +24,29 @@ int main()
     int b = s->CreateBehavior(pattern);
 
     // Create two Points in the middle of the screen facing opposite directions
-    s->CreateRandElements(100, 10, 800, 10, 800, b);
+    s->CreateRandElements(10000, 10, 800, 10, 800, b);
 
     // Run this only for testing logic (NOT FOR MEASURE)
-    Renderer<Point> twodee = Renderer<Point>(800, 800, 1);
-    s->Run(20, twodee);
+    //Renderer<Point> twodee = Renderer<Point>(800, 800, 1);
+    //s->Run(20, twodee);
 
     // Run this for measure
-    //int step = 100;
+    int step = 50;
+
     // Start timing
-    //s->Run(step);
+    std::chrono::time_point<std::chrono::system_clock> start, end;
+    start = std::chrono::system_clock::now();
+    s->Run(step);
     // End timing
+    end = std::chrono::system_clock::now();
+    
+    std::chrono::duration<double> elapsed_seconds = end-start;
+    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+    
+    std::cout << "finished computation at " << std::ctime(&end_time)
+    << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
     delete s;
+    
     return 0;
 }

@@ -56,12 +56,12 @@ void Simulation<elem>::Run(int gen_count) {
     if (gen_count == 0)
         while (true) {
             UpdateState();
-            cout << curr_state << endl;
+            //cout << curr_state << endl;
         }
     else
         for(int i=0; i < gen_count; i++) {
             UpdateState();
-            cout << curr_state << endl;
+            //cout << curr_state << endl;
         }
 }
 
