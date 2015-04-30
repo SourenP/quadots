@@ -7,7 +7,6 @@ using namespace std;
 float delta_dir(float curr_dir, float goal_dir, float steps) {
     float delta1 = goal_dir - curr_dir;
     float delta2 = (goal_dir > curr_dir) ? (delta1 - 360) : (delta1 + 360);
-    //cout << delta1 << endl;
     if(abs(delta1) < abs(delta2))
         return delta1/steps;
     else
@@ -82,10 +81,10 @@ int main()
     s->CreateRandDots(100, 10, 790, 10, 790, b1);
 
     // Initialize Renderer
-    Renderer<Dot> twodee = Renderer<Dot>(800, 800, 100);
+    Renderer<Dot> twodee = Renderer<Dot>(1000, 1000, 100);
 
-    // Run Simulation for 200 steps
-    s->Run(0, twodee);
+    // Run Simulation for 1000 steps
+    s->Run(5000, twodee);
 
     delete s;
     return 0;
