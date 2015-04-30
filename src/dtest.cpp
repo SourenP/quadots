@@ -4,6 +4,7 @@
 #include <cmath>
 using namespace std;
 
+int collision_count = 0;
 float delta_dir(float curr_dir, float goal_dir, float steps) {
     float delta1 = goal_dir - curr_dir;
     float delta2 = (goal_dir > curr_dir) ? (delta1 - 360) : (delta1 + 360);
@@ -62,31 +63,50 @@ void bounds(Dot::Dot_p p, Control<Dot>& c) {
         p->set_y(1);
 }
 
+void collision_detection(Dot::Dot_p p, Control<Dot>& c) {
+    vector<Dot::Dot_p> neighbors = c.qneighbors(p, 5);
+    collision_count += neighbors.size();
+    
+    p->set_ang(360 - p->get_ang());
+}
+
 int main()
 {
     // Brains
-    Simulation<Dot>::rule r1 = &cohesion;
+    /*Simulation<Dot>::rule r1 = &cohesion;
     Simulation<Dot>::rule r2 = &alignment;
     Simulation<Dot>::rule r3 = &separation;
-    Simulation<Dot>::rule r4 = &bounds;
+    Simulation<Dot>::rule r4 = &bounds;*/
 
-    Simulation<Dot>::behavior boid = {r1,r2,r3,r4};
+    Simulation<Dot>::rule r1 = &collision_detection;
+    Simulation<Dot>::behavior cd = {r1};
 
     // Initialize Simulation
     Simulation<Dot> *s = new Simulation<Dot>(800, 800);
 
     // Create behavior circle
-    int b1 = s->CreateBehavior(boid);
+    int b1 = s->CreateBehavior(cd);
 
     // Create two Points in the middle of the screen facing opposite directions
-    s->CreateRandDots(100, 10, 790, 10, 790, b1);
+    s->CreateRandDots(500, 10, 790, 10, 790, b1);
 
     // Initialize Renderer
     Renderer<Dot> twodee = Renderer<Dot>(800, 800, 100);
 
     // Run Simulation for 200 steps
-    s->Run(0, twodee);
+    std::chrono::time_point<std::chrono::system_clock> start, end;
+    start = std::chrono::system_clock::now();
+    s->Run(1000, twodee);
 
+    end = std::chrono::system_clock::now();
+    
+    std::chrono::duration<double> elapsed_seconds = end-start;
+    std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+    
+    std::cout << "finished computation at " << std::ctime(&end_time)
+    << "elapsed time: " << elapsed_seconds.count() << "s\n";
+    
+    cout << collision_count/elapsed_seconds.count();
     delete s;
     return 0;
 }
