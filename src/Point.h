@@ -9,6 +9,7 @@ class Point
 {
     protected:
         static int nextID;
+        unsigned id;
     public:
         typedef shared_ptr<Point> Point_p;
 
@@ -29,7 +30,6 @@ class Point
         float x;
         float y;
         int bindex;
-        unsigned id;
 };
 
 #endif

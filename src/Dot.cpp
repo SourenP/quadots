@@ -8,6 +8,7 @@ Dot::Dot(float x, float y, float ang, float vel, unsigned int bindex)
 	this->set_b(bindex);
 	this->ang = ang;
 	this->vel = vel;
+	this->id = ++(this->nextID);
 }
 
 float Dot::get_ang() const{
@@ -28,6 +29,14 @@ void Dot::set_ang(float ang) {
 }
 void Dot::set_vel(float vel) {
 	this->vel = vel;
+}
+
+void Dot::add_ang(float delta) {
+	this->set_ang(this->get_ang() + delta);
+}
+
+void Dot::add_vel(float delta) {
+	this->set_vel(this->get_vel() + delta);
 }
 
 void Dot::update() {

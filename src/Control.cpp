@@ -57,42 +57,42 @@ void Control<elem>::setState(State<elem> *s) {
 
 template <class elem>
 float Control<elem>::com_x() const {
-	float sum;
+	float sum = 0;
 	vector<Elem_p> elements = state->get_elements();
 	for(auto e : elements)
 		sum += e->get_x();
-	return sum/state->elements.size();
+	return sum/elements.size();
 }
 
 template <class elem>
 float Control<elem>::com_x(const vector<Elem_p> elements) const {
-	float sum;
+	float sum = 0;
 	for(auto e : elements)
 		sum += e->get_x();
-	return sum/state->elements.size();
+	return sum/elements.size();
 }
 
 template <class elem>
 float Control<elem>::com_y() const {
-	float sum;
+	float sum = 0;
 	vector<Elem_p> elements = state->get_elements();
 	for(auto e : elements)
 		sum += e->get_y();
-	return sum/state->elements.size();
+	return sum/elements.size();
 }
 
 template <class elem>
 float Control<elem>::com_y(const vector<Elem_p> elements) const {
-	float sum;
+	float sum = 0;
 	for(auto e : elements)
 		sum += e->get_y();
-	return sum/state->elements.size();
+	return sum/elements.size();
 }
 
 
 template <class elem>
 float Control<elem>::avg_dir() const {
-	float sum;
+	float sum = 0;
 	vector<Elem_p> elements = state->get_elements();
 	for(auto e : elements)
 		sum += e->get_ang();
@@ -101,7 +101,7 @@ float Control<elem>::avg_dir() const {
 
 template <class elem>
 float Control<elem>::avg_dir(const vector<Elem_p> elements) const {
-	float sum;
+	float sum = 0;
 	for(auto e : elements)
 		sum += e->get_ang();
 	return sum/(elements.size());

@@ -26,7 +26,7 @@ class Quadtree {
 public:
 
     float get_distance(float a_x, float a_y, float b_x, float b_y) {
-        return sqrt(pow(a_x - a_y,2) + pow(a_x - a_y,2));
+        return sqrt(pow(a_x - b_x,2) + pow(a_y - b_y,2));
     }
     
     Quadtree(float x, float y, float width, float height);
@@ -204,15 +204,18 @@ vector<elem> Quadtree<elem>::getNearestNeighbours(elem c, float rad) {
 
         if (T->isLeaf()) {
             for (elem p : T->objects) {
-                if((p->get_id() != c->get_id()) && (get_distance(p->get_x(), p->get_y(), c->get_x(), c->get_y()) < rad))
+                //if((p->get_id() != c->get_id()) && (get_distance(p->get_x(), p->get_y(), c->get_x(), c->get_y()) < rad))
+                if(get_distance(p->get_x(), p->get_y(), c->get_x(), c->get_y()) < rad)
                     neighbors.push_back(p);
             }
         } else {
             for(Quadtree<elem> *C : T->nodes) {
                 if (C->isLeaf()) {
-                    for (elem p : C->objects)
-                        if((p->get_id() != c->get_id()) && (get_distance(p->get_x(), p->get_y(), c->get_x(), c->get_y()) < rad))
+                    for (elem p : C->objects) {
+                        //if((p->get_id() != c->get_id()) && (get_distance(p->get_x(), p->get_y(), c->get_x(), c->get_y()) < rad))
+                        if(get_distance(p->get_x(), p->get_y(), c->get_x(), c->get_y()) < rad)
                             neighbors.push_back(p);
+                    }
                 } else if (C->intersects(rad, c)) {
                     s.push(C);
                 }

@@ -6,9 +6,10 @@
 using namespace std;
 
 void random_move(Point::Point_p p, Control<Point>& c) {
-    vector<Point::Point_p> elements = c.neighbors(p, 50);
-    p->set_x(c.random_pos(0,800));
-    p->set_y(c.random_pos(0,800));
+    vector<Point::Point_p> elements = c.qneighbors(p, 250);
+    cout << elements.size() << endl;
+    //p->set_x(c.random_pos(0,800));
+    //p->set_y(c.random_pos(0,800));
 }
 
 int main()
@@ -25,7 +26,9 @@ int main()
     int b = s->CreateBehavior(pattern);
 
     // Create two Points in the middle of the screen facing opposite directions
-    s->CreateRandElements(100, 10, 800, 10, 800, b);
+    s->CreateElement(Point(100, 100, b));
+    s->CreateElement(Point(100, 300, b));
+    //s->CreateRandElements(100, 10, 800, 10, 800, b);
 
     // Run this only for testing logic (NOT FOR MEASURE)
     Renderer<Point> twodee = Renderer<Point>(800, 800, 1);

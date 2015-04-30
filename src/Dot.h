@@ -20,6 +20,9 @@ class Dot: public Point
         void set_ang(float ang);
         void set_vel(float vel);
 
+        void add_ang(float delta);
+        void add_vel(float delta);
+
         void update();
     private:
         float ang;
