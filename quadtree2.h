@@ -24,7 +24,7 @@ using namespace std;
 
 class quadtree2 {
 public:
-    quadtree2(int plevel, double x, double y, double width, double height);
+    quadtree2(int plevel, double x, double y, double width, double height, int index);
     ~quadtree2();
     void insert(Point p);
     //void clear();
@@ -32,11 +32,13 @@ public:
     void retrieve(vector<Point>& robjects, Point p);
     vector<Point> getNearestNeighbours(float rad, pair<float, float> c);
     bool isLeaf();
+    bool intersects(double radius, pair<float, float> c);
 
 private:
 
     double x;
     double y;
+    int index;
     int level;
     double width;
     double height;
@@ -44,7 +46,6 @@ private:
     vector<Point> objects;
 
     void split();
-    bool intersects(double radius, pair<float, float> c);
     int getIndex(Point p);
 };
 
