@@ -1,11 +1,13 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>
 #include <stdio.h>
 #include <vector>
 #include <math.h>
 #include <iostream>
-#include "State.cpp"
+#include "State.cpp"     
 using namespace std;
 
 template <class elem>
@@ -31,6 +33,8 @@ public:
 
 	vector<Elem_p> qneighbors(Elem_p a, float range);
 
+	float random_pos(int minx, int miny);
+
 	//vector<Elem_p> neighbors(const Elem_p a, float range) const;
 
     void setState(State<elem> *s);
@@ -43,6 +47,7 @@ template <class elem>
 Control<elem>::Control(State<elem> *s)
 {
 	this->state = s;
+	srand(time(NULL));
 }
 
 template <class elem>
@@ -119,6 +124,11 @@ float Control<elem>::get_distance(const Elem_p a, const Elem_p b) const {
 template <class elem>
 vector<shared_ptr<elem>> Control<elem>::qneighbors(shared_ptr<elem> a, float range) {
 	return state->get_neighbors(a, range);
+}
+
+template <class elem>
+float Control<elem>::random_pos(int min, int max) {
+	return(float) (rand() % max + min);
 }
 
 /*
