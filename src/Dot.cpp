@@ -19,6 +19,11 @@ float Dot::get_vel() const{
 	return this->vel;
 }
 
+/*
+	Normalizes the angle to be
+	in the range [0,360] and 
+	assigns it to the dot
+*/
 void Dot::set_ang(float ang) {
 	if (ang> 360.0) {
 		ang = 360 - ang;
@@ -27,6 +32,7 @@ void Dot::set_ang(float ang) {
 	}
 	this->ang = ang;
 }
+
 void Dot::set_vel(float vel) {
 	this->vel = vel;
 }
@@ -39,8 +45,10 @@ void Dot::add_vel(float delta) {
 	this->set_vel(this->get_vel() + delta);
 }
 
+/*
+	Update location based on angle and velocity
+*/
 void Dot::update() {
-    // Update location based on angle and velocity
     this->set_x(this->get_x() + cos(this->get_ang() * PI/180.0) * this->get_vel());
     this->set_y(this->get_y() + sin(this->get_ang() * PI/180.0) * this->get_vel());
 }
