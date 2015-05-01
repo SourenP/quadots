@@ -10,10 +10,12 @@
 #include <iostream>
 #include <stack>
 
+using namespace std;
+
+// Declaration
+
 #define MAX_LEVELS 100
 #define MAX_OBJECTS 10
-
-using namespace std;
 
 template <class elem>
 class Quadtree {
@@ -47,7 +49,7 @@ private:
     int getIndex(elem p) const;
 };
 
-// CPP
+// Implementation
 
 /*
     Create quadtree root with top left corner at coordinates x,y
