@@ -8,6 +8,7 @@ CFLAGS   = -g -Wall -std=c++0x $(INCLUDES) $(shell sdl-config --cflags)
 CXXFLAGS = -g -Wall -std=c++0x $(INCLUDES)
 
 boids:
+collisions:
 
 .PHONY: clean
 clean:
