@@ -27,3 +27,4 @@ ompiled Object files
 *.out
 *.app
 boids
+collisions
