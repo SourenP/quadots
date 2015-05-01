@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Dot.h"
-#include "Simulation.cpp"
+#include "Simulation.h"
 #include <cmath>
 using namespace std;
 
