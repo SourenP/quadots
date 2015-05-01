@@ -11,7 +11,7 @@ using namespace std;
 /*
     Returns a random float in the range [min, max) 
 */
-float random_pos(int min, int max) {
+float random_f(int min, int max) {
     return(float) (rand() % max + min);
 }
 
@@ -103,7 +103,7 @@ int main()
     // Put all rules into a behavior
     Simulation<Dot>::behavior boid = {r1, r2, r3, r4};
 
-    // Create behavior circle
+    // Create behavior boid
     int b = sim->CreateBehavior(boid);
 
     // Define random seed
@@ -112,12 +112,12 @@ int main()
     // Create 200 Dots in random position, random directions, velocity 1, behavior index b (boids)
     int count = 200;
     for(int i=0; i < count; i++)
-        sim->CreateElement(Dot(random_pos(0,800), random_pos(0,800), random_pos(0,360), 1, b));
+        sim->CreateElement(Dot(random_f(0,800), random_f(0,800), random_f(0,360), 1, b));
 
     // Initialize Renderer
     Renderer<Dot> twodee = Renderer<Dot>(800, 800, 200);
 
-    // Run Simulation for 5000 steps with renderer
+    // Run Simulation infinitely with renderer
     sim->Run(0, twodee);
 
     delete sim;

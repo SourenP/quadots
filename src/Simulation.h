@@ -25,7 +25,6 @@ public:
     Simulation(double width, double height);
     ~Simulation();
 
-    State<elem> *curr_state;
     void CreateElement(elem e);
     int CreateBehavior(behavior &b);
     void Run(int gen_count, bool print);
@@ -33,6 +32,7 @@ public:
 
 private:
     Control<elem> *control;
+    State<elem> *curr_state;
     vector<behavior> behaviors;
     void UpdateState();
     void DrawElements();
