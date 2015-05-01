@@ -1,12 +1,14 @@
-#ifndef RENDERER_H
-#define RENDERER_H
+#ifndef RENDERER_H_INCLUDED
+#define RENDERER_H_INCLUDED
 
 #include <stdio.h>
 #include <iostream>
 #include <cstdint>
 #include <SDL2/SDL.h>
-#include "State.cpp"
+#include "State.h"
 using namespace std;
+
+// Declaration
 
 template <class elem>
 class Renderer
@@ -31,8 +33,12 @@ private:
     void logSDLError(ostream &os, const string &msg);
 };
 
-#endif
+// Definition
 
+/*
+    Contsturctor
+    Creates the SDL screen and renderer and initializes variables.
+*/
 template <class elem>
 Renderer<elem>::Renderer(int screen_w, int screen_h, float sps)
 {
@@ -56,6 +62,21 @@ Renderer<elem>::Renderer(int screen_w, int screen_h, float sps)
 }
 
 /*
+    Desturctor
+    Destroys the SDL screen and renderer and quits.
+*/
+template <class elem>
+Renderer<elem>::~Renderer()
+{
+    // Destroy window
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    renderer = NULL;
+    window = NULL;
+    SDL_Quit();
+}
+
+/*
     Loops over all elements and draws them.
 */
 template <class elem>
@@ -74,8 +95,9 @@ bool Renderer<elem>::RenderState(State<elem> &s) {
     vector<shared_ptr<elem>> elements = s.get_elements();
     for (auto p : elements) {
         // note: deal with out of bounds x/y later
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         
+        // Draw point as 9x9 black pixel
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderDrawPoint(renderer, p->get_x()-1, p->get_y());
         SDL_RenderDrawPoint(renderer, p->get_x(), p->get_y()-1);
         SDL_RenderDrawPoint(renderer, p->get_x()-1, p->get_y()-1);
@@ -103,18 +125,12 @@ void Renderer<elem>::DrawBackground() {
     SDL_RenderFillRect(renderer, &backRect);
 }
 
+/*
+    Logs SDL errors.
+*/
 template <class elem>
 void Renderer<elem>::logSDLError(ostream &os, const string &msg) {
     os << msg << " error: " << SDL_GetError() << endl;
 }
 
-template <class elem>
-Renderer<elem>::~Renderer()
-{
-    // Destroy window
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    renderer = NULL;
-    window = NULL;
-    SDL_Quit();
-}
+#endif

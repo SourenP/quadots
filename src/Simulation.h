@@ -1,5 +1,5 @@
-#ifndef Simulation_H
-#define Simulation_H
+#ifndef SIMULATION_H_INCLUDED
+#define SIMULATION_H_INCLUDED
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,12 +8,11 @@
 #include <cstdint>
 #include <SDL2/SDL.h>
 #include <cstddef>
-#include "Quadtree.cpp"
-#include "State.cpp"
-#include "Renderer.cpp"
-#include "Control.cpp"
-
+#include "Renderer.h"
+#include "Control.h"
 using namespace std;
+
+// Declaration
 
 template <class elem>
 class  Simulation
@@ -28,24 +27,27 @@ public:
 
     State<elem> *curr_state;
     void CreateElement(elem e);
-    void CreateRandPoints(int count, int min_x, int max_x, int min_y, int max_y, int bindex);
-    void CreateRandDots(int count, int min_x, int max_x, int min_y, int max_y, int bindex);
     int CreateBehavior(behavior &b);
-    void Run(int gen_count);
-    void Run(int gen_count, Renderer<elem> &r);
+    void Run(int gen_count, bool print);
+    void Run(int gen_count, Renderer<elem> &renderer);
 
 private:
     Control<elem> *control;
     vector<behavior> behaviors;
     void UpdateState();
     void DrawElements();
-    void logError(ostream &os, const string &msg);
+    void logError(const string &msg);
     float sim_width;
     float sim_height;
 };
 
-// CPP
+// Definition
 
+/*
+    Constructor
+    Sets wdith and height of the simulation (needed for the state)
+    And creates the State and Control objects of the simulation.
+*/
 template <class elem>
 Simulation<elem>::Simulation(double width, double height) {
     this->sim_width = width;
@@ -55,71 +57,91 @@ Simulation<elem>::Simulation(double width, double height) {
 }
 
 /*
-    Updates and prints Elements @gen_count times.
+    Destructor
+    Delete state and control.
 */
 template <class elem>
-void Simulation<elem>::Run(int gen_count) {
-    // Update and print
+Simulation<elem>::~Simulation()
+{   
+    delete curr_state;
+    delete control;
+}
+
+/*
+    gen_count times (0 is infinite):
+    Updates state and if print is true, print the state.
+*/
+template <class elem>
+void Simulation<elem>::Run(int gen_count, bool print) {
     if (gen_count == 0)
         while (true) {
             UpdateState();
-            cout << *curr_state << endl;
+            if (print) cout << *curr_state << endl;
         }
     else
         for(int i=0; i < gen_count; i++) {
             UpdateState();
-            cout << *curr_state << endl;
+            if (print) cout << *curr_state << endl;
         }
 }
 
 /*
-    Updates and renders Elements @gen_count times.
+    gen_count time (0 is infinite): 
+    Updates state and renders it using renderer passed in.
 */
 template <class elem>
-void Simulation<elem>::Run(int gen_count, Renderer<elem> &r) {
+void Simulation<elem>::Run(int gen_count, Renderer<elem> &renderer) {
     bool quit = false;
     // Update and draw
     if (gen_count == 0)
         while (true) {
             UpdateState();
-            quit = r.RenderState(*curr_state);
+            quit = renderer.RenderState(*curr_state);
             if (quit) return;
         }
     else
         for(int i=0; i < gen_count; i++) {
             UpdateState();
-            quit = r.RenderState(*curr_state);
+            quit = renderer.RenderState(*curr_state);
             if (quit) return;
         }
 }
 
 /*
-    Calculates new position of Elements.
+    Updates the current state by assigning it a new altered state.
 */
 template <class elem>
 void Simulation<elem>::UpdateState() {
+    // Get the elements from the current state
     vector<Elem_p> curr_elements = curr_state->get_elements();
+    // Creating a new state
     State<elem> *new_state = new State<elem>(sim_width, sim_height);
+    // For each element in current state:
     for (Elem_p p : curr_elements) {
+        // Copy the element
         Elem_p new_p(new elem(*p));
+        // Check if behavior is valid
         if (new_p->get_b() >= 0) {
             if (new_p->get_b() > behaviors.size()) {
-                logError(cerr, "Behavior index out of range.");
+                logError("Behavior index out of range.");
                 return;
             } 
-                for (rule r : behaviors[new_p->get_b()])
-                    r(new_p, *control);
+            // Apply rules in behavior
+            for (rule r : behaviors[new_p->get_b()])
+                r(new_p, *control);
         }
         new_p->update();
         new_state->add(new_p);
     }
+
+    // Delete old state and replace with new
     delete curr_state;
     curr_state = new_state;
     control->setState(curr_state);
 }
 
 /*
-    Creates a new Element and returns a smart pointer to it.
+    Creates a new element and returns a shared pointer to it.
 */
 template <class elem>
 void Simulation<elem>::CreateElement(elem e) {
@@ -127,45 +149,22 @@ void Simulation<elem>::CreateElement(elem e) {
     curr_state->add(new_element_p);
 }
 
-template <class elem>
-void Simulation<elem>::CreateRandPoints(int count, int min_x, int max_x, int min_y, int max_y, int bindex) {
-    srand(time(NULL));
-    for(int i=0; i < count; i++) {
-        float x = (float) (rand() % max_x + min_x);
-        float y = (float) (rand() % max_y + min_y);
-        Elem_p new_element_p(new elem(x,y,bindex));
-        curr_state->add(new_element_p);
-    }
-}
-
-template <class elem>
-void Simulation<elem>::CreateRandDots(int count, int min_x, int max_x, int min_y, int max_y, int bindex) {
-    srand(time(NULL));
-    for(int i=0; i < count; i++) {
-        float x = (float) (rand() % max_x + min_x);
-        float y = (float) (rand() % max_y + min_y);
-        Elem_p new_element_p(new elem(x,y,0,1,bindex));
-        curr_state->add(new_element_p);
-    }
-}
-
-
+/*
+    Adds the passed behavior to the behaviors container.
+    Returns the index it was added to give to an element.
+*/
 template <class elem>
 int Simulation<elem>::CreateBehavior(behavior &b) {
     this->behaviors.push_back(b);
     return (behaviors.size() - 1);
 }
 
+/*
+    Logs string to cerr with "error: " at the start.
+*/
 template <class elem>
-void Simulation<elem>::logError(ostream &os, const string &msg) {
-    os << " error: " << msg << endl;
-}
-
-template <class elem>
-Simulation<elem>::~Simulation()
-{   
-    delete curr_state;
-    delete control;
+void Simulation<elem>::logError(const string &msg) {
+    cerr << " error: " << msg << endl;
 }
 
 #endif

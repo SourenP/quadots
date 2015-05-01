@@ -11,7 +11,7 @@ Dot::Dot(float x, float y, float ang, float vel, unsigned int bindex)
 	this->id = ++(this->nextID);
 }
 
-float Dot::get_ang() const{
+float Dot::get_ang() const {
 	return this->ang;
 }
 

@@ -2,32 +2,22 @@ CC  = g++
 CXX = g++
 
 INCLUDES =
+LDLIBS  =  
 
-CFLAGS   = -g -Wall $(INCLUDES) -std=c++0x
+CFLAGS   = -g -Wall $(INCLUDES) -std=c++0x 
 CXXFLAGS = -g -Wall $(INCLUDES) -std=c++0x
 
-LDFLAGS = -g
-LDLIBS  = -L../include -lSDL2
+default: Dot.o Point.o
+	ar rc libquadots.a Dot.o Point.o
+	ranlib libquadots.a
 
-point_test = ptest
-dot_test = dtest
-quad_test = qtest
-objects = dtest.o ptest.o qtest.o Point.o Dot.o Quadtree.o Simulation.o Renderer.o Control.o State.o
+Point.o: Point.h
+Dot.o: Point.h Dot.h
 
-point_test: $(point_test)
-$(point_test): ptest.o Point.o Dot.o Quadtree.o Simulation.o Renderer.o Control.o State.o
-
-dot_test: $(dot_test)
-$(dot_test): dtest.o Point.o Dot.o Quadtree.o Simulation.o Renderer.o Control.o State.o
-
-quad_test: $(quad_test)
-$(quad_test): qtest.o Point.o Dot.o Quadtree.o
-
-$(objects): Point.h Dot.h 
 
 .PHONY: clean
 clean:
-	rm -f *~ a.out core $(objects) $(point_test) $(dot_test)
+	rm -f *.o *~ a.out core libquadots.a
 
 .PHONY: all
 all: clean default

@@ -16,7 +16,7 @@ float random_pos(int min, int max) {
 }
 
 /*
-    ???
+    Returns value of direction to add "steps" times to curr_dir for it to equal goal_dir
 */
 float delta_dir(float curr_dir, float goal_dir, float steps) {
     float delta1 = goal_dir - curr_dir;
@@ -30,7 +30,7 @@ float delta_dir(float curr_dir, float goal_dir, float steps) {
 // Boid rules
 
 /*
-    ???
+    Steer to avoid crowding local flockmates
 */
 void separation(Dot::Dot_p p, Control<Dot>& c) {
     vector<Dot::Dot_p> neighbors = c.qneighbors(p, 50);
@@ -46,7 +46,7 @@ void separation(Dot::Dot_p p, Control<Dot>& c) {
 }
 
 /*
-    ???
+    Steer towards the average heading of local flockmates
 */
 void alignment(Dot::Dot_p p, Control<Dot>& c) {
     vector<Dot::Dot_p> neighbors = c.qneighbors(p, 100);
@@ -60,7 +60,7 @@ void alignment(Dot::Dot_p p, Control<Dot>& c) {
 }
 
 /*
-    ???
+    Steer to move toward the average position of local flockmates
 */
 void cohesion(Dot::Dot_p p, Control<Dot>& c) {
     vector<Dot::Dot_p> neighbors = c.qneighbors(p, 150);
@@ -75,8 +75,9 @@ void cohesion(Dot::Dot_p p, Control<Dot>& c) {
     }
 }
 
-// Loop Dots that go out of bounds
-
+/*
+    Loop dots to other side if they go out of bounds
+*/
 void bounds(Dot::Dot_p p, Control<Dot>& c) {
     if(p->get_x() <= 0)
         p->set_x(799);
@@ -90,32 +91,35 @@ void bounds(Dot::Dot_p p, Control<Dot>& c) {
 
 int main()
 {
-    // Brains
+    // Initialize Simulation 800x800 pixels
+    Simulation<Dot> *sim = new Simulation<Dot>(800, 800);
+
+    // Define rules of boids
     Simulation<Dot>::rule r1 = &cohesion;
     Simulation<Dot>::rule r2 = &alignment;
     Simulation<Dot>::rule r3 = &separation;
     Simulation<Dot>::rule r4 = &bounds;
 
+    // Put all rules into a behavior
     Simulation<Dot>::behavior boid = {r1, r2, r3, r4};
 
-    // Initialize Simulation
-    Simulation<Dot> *s = new Simulation<Dot>(800, 800);
-
     // Create behavior circle
-    int b1 = s->CreateBehavior(boid);
+    int b = sim->CreateBehavior(boid);
 
-    // Define randome seed
+    // Define random seed
     srand(time(NULL));
-    // Create two Points in the middle of the screen facing opposite directions
-    for(int i=0; i < 200; i++)
-        s->CreateElement(Dot(random_pos(0,800), random_pos(0,800), random_pos(0,360), 1, b1));
+
+    // Create 200 Dots in random position, random directions, velocity 1, behavior index b (boids)
+    int count = 200;
+    for(int i=0; i < count; i++)
+        sim->CreateElement(Dot(random_pos(0,800), random_pos(0,800), random_pos(0,360), 1, b));
 
     // Initialize Renderer
     Renderer<Dot> twodee = Renderer<Dot>(800, 800, 200);
 
-    // Run Simulation for 5000 steps
-    s->Run(5000, twodee);
+    // Run Simulation for 5000 steps with renderer
+    sim->Run(500, twodee);
 
-    delete s;
+    delete sim;
     return 0;
 }

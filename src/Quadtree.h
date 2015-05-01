@@ -1,6 +1,5 @@
-/* Header file for Quadtree library */
-#ifndef QUADTREE_CPP
-#define QUADTREE_CPP
+#ifndef QUADTREE_H_INCLUDED
+#define QUADTREE_H_INCLUDED
 
 #include <vector>
 #include <stdio.h>
@@ -11,15 +10,12 @@
 #include <iostream>
 #include <stack>
 
-/* Quadtree will consist of levels which will have a certain width and height and a number associated.
-Each level will consist of a vector of Points. 
-The Quadtree library will also have pointer to its parent node and 4 children nodes. 
-Each level can not have more than 4 nodes. */
+using namespace std;
+
+// Declaration
 
 #define MAX_LEVELS 100
-#define MAX_OBJECTS 1
-
-using namespace std;
+#define MAX_OBJECTS 10
 
 template <class elem>
 class Quadtree {
@@ -35,8 +31,7 @@ public:
     void traverseTree() const;
     void get_elements(vector<elem>& robjects) const;
     void get_roommates(vector<elem>& robjects, elem p) const;
-    vector<elem> getNearestNeighbours(elem c, float rad);
-    bool isLeaf() const;
+    vector<elem> get_neighbours(elem c, float rad);
 
 private:
     float x;
@@ -47,14 +42,18 @@ private:
     vector<Quadtree*> nodes;
     vector<elem> objects;
 
-    Quadtree(int plevel, float x, float y, float width, float height);
+    Quadtree(int level, float x, float y, float width, float height);
+    bool isLeaf() const;
     void split();
     bool intersects(float rad, elem c);
     int getIndex(elem p) const;
 };
 
-// CPP
+// Implementation
 
+/*
+    Create quadtree root with top left corner at coordinates x,y
+*/
 template <class elem>
 Quadtree<elem>::Quadtree(float x, float y, float width, float height) {
     this->level = 0;
@@ -66,10 +65,12 @@ Quadtree<elem>::Quadtree(float x, float y, float width, float height) {
     this->objects = vector<elem>();
 }
 
-
+/*
+    Create quadtree node at certain level
+*/
 template <class elem>
-Quadtree<elem>::Quadtree(int pLevel, float x, float y, float width, float height) {
-    this->level = pLevel;
+Quadtree<elem>::Quadtree(int level, float x, float y, float width, float height) {
+    this->level = level;
     this->x = x;
     this->y = y;
     this->width = width;
@@ -79,8 +80,8 @@ Quadtree<elem>::Quadtree(int pLevel, float x, float y, float width, float height
 }
 
 /*
- * Splits the node into 4 subnodes
- */
+    Creates four new quadtress (divides into four equal square segments) and puts them into nodes vector
+*/
 template <class elem>
 void Quadtree<elem>::split() {
     float subWidth = (this->width / 2);
@@ -93,14 +94,11 @@ void Quadtree<elem>::split() {
 }
 
 /*
- * Determine which node the object belongs to. -1 means
- * object cannot completely fit within a child node and is part
- * of the parent node
- */
+    Determine which subtree element should be insterteed into based on position
+*/
  template <class elem>
  int Quadtree<elem>::getIndex(elem p) const{
-    int index = -1;
-
+    int index;
     float verMidpoint = this->x + 0.5*this->width;
     float horMidpoint = this->y + 0.5*this->height;
 
@@ -120,10 +118,10 @@ void Quadtree<elem>::split() {
 }
 
 /*
- * Insert the object into the Quadtree. If the node
- * exceeds the capacity, it will split and add all
- * objects to their corresponding nodes.
- */
+    Insert element into the quadtree.
+    If quadtree reaches capacity, split into subtree
+    and insert elements into appropriate quadtrees.
+*/
 template <class elem>
 void Quadtree<elem>::insert(elem p) {
     // If tree is already split
@@ -136,8 +134,12 @@ void Quadtree<elem>::insert(elem p) {
     }
 
     objects.push_back(p);
+
+    // If quadtree exceeds capacity
     if (objects.size() > MAX_OBJECTS && level < MAX_LEVELS) {
         split();
+
+        // Put each element into appropriate subtree
         for(elem p : objects) {
             int index = getIndex(p);
             nodes[index]->insert(p);
@@ -146,6 +148,11 @@ void Quadtree<elem>::insert(elem p) {
     }
 }
 
+/*
+    Get all elements that are in the same quadtree as element p.
+    This only returns elements in the quadtree (not it's subtrees too).
+    p will also be returned.
+*/
 template <class elem>
 void Quadtree<elem>::get_roommates(vector<elem>& robjects, elem p) const{
     int index = getIndex(p);
@@ -158,17 +165,25 @@ void Quadtree<elem>::get_roommates(vector<elem>& robjects, elem p) const{
     }
 }
 
-/* Use this function for testing */
+/*
+    Traverse tree and print out elements with what level they are at.
+    Mainly for testing.
+*/
 template <class elem>
 void Quadtree<elem>::traverseTree() const {
+    // print out elements
     for(elem p : objects)
         cout << p->get_x() << " " << p->get_y() << " at level " << level << endl;
 
+    // traverse subtrees
     for(Quadtree<elem>* n : nodes)
         n->traverseTree();
 }
 
-/* Use this function for testing */
+/*
+    Get all the elements in the quadtree.
+    This includes the elements of all its subtrees.
+*/
 template <class elem>
 void Quadtree<elem>::get_elements(vector<elem>& robjects) const {
     for(elem p : objects)
@@ -177,6 +192,11 @@ void Quadtree<elem>::get_elements(vector<elem>& robjects) const {
         n->get_elements(robjects);
 }
 
+/*
+    Return true if this quadtree intersecs with the area
+    formed by a square around c with the lenght rad.
+    Used for nearest neighbors.
+*/
 template <class elem>
 bool Quadtree<elem>::intersects(float rad, elem c) {
     pair<float, float> P1(this->x, this->y); 
@@ -198,22 +218,30 @@ bool Quadtree<elem>::intersects(float rad, elem c) {
     return !seperate;
 }
 
+/*
+    Gets all neighbors of element c in the radius rad.
+*/
 template <class elem>
-vector<elem> Quadtree<elem>::getNearestNeighbours(elem c, float rad) {
+vector<elem> Quadtree<elem>::get_neighbours(elem c, float rad) {
+    // Maintain a stack of all quadtrees whose elements will be compared
     stack<Quadtree<elem>*> s;
     vector<elem> neighbors;
+
+    // Push root onto stack
     s.push(this);
 
     while(!s.empty()) {
         Quadtree<elem> *T = s.top();
         s.pop();
 
+        // If T is a leaf, check if the elements in it lie in the radius
         if (T->isLeaf()) {
             for (elem p : T->objects) {
                 if((p->get_id() != c->get_id()) && (get_distance(p->get_x(), p->get_y(), c->get_x(), c->get_y()) < rad))
                     neighbors.push_back(p);
             }
         } else {
+            // For all subtrees, push onto the stack those that intersect with the area around c that is being considered.
             for(Quadtree<elem> *C : T->nodes) {
                 if (C->isLeaf()) {
                     for (elem p : C->objects) {
@@ -229,11 +257,18 @@ vector<elem> Quadtree<elem>::getNearestNeighbours(elem c, float rad) {
     return neighbors;
 }
 
+/*
+    Return true if quadtree has no children.
+*/
 template <class elem>
 bool Quadtree<elem>::isLeaf() const {
     return !nodes.size(); 
 }
 
+/*
+    Destructor.
+    Delete all subtrees.
+*/
 template <class elem>
 Quadtree<elem>::~Quadtree() {
     for(Quadtree<elem> *n : nodes) {
