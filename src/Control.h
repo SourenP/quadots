@@ -8,6 +8,7 @@
 #include <math.h>
 #include <iostream>
 #include "State.h"
+#include "Dot.h"
 using namespace std;
 
 template <class elem>
@@ -147,11 +148,15 @@ vector<typename Control<elem>::Elem_p> Control<elem>::neighbors(const Elem_p a, 
 
 // Specific to Dots
 
+template <class elem>
+float Control<elem>::avg_dir() const {
+	return 0;
+}
 /*
 	Returns average dirrection of all Dots in state.
 */
-template <class elem>
-float Control<elem>::avg_dir() const {
+template <>
+float Control<Dot>::avg_dir() const {
 	float sum = 0;
 	vector<Elem_p> elements = state->get_elements();
 	for(auto e : elements)
@@ -159,22 +164,32 @@ float Control<elem>::avg_dir() const {
 	return sum/elements.size();
 }
 
+template <class elem>
+float Control<elem>::avg_dir(const vector<Elem_p> elements) const {
+	return 0;
+}
+
 /*
 	Returns average direction of all Dots in elements vector.
 */
-template <class elem>
-float Control<elem>::avg_dir(const vector<Elem_p> elements) const {
+template <>
+float Control<Dot>::avg_dir(const vector<Dot::Dot_p> elements) const {
 	float sum = 0;
 	for(auto e : elements)
 		sum += e->get_ang();
 	return sum/(elements.size());
 }
 
+template <class elem>
+float Control<elem>::dir_towards(const Elem_p a, float x, float y) const {
+	return 0;
+}
+
 /*
 	Returns direction Dot a should have to be facing the point at coordinates x,y.
 */
-template <class elem>
-float Control<elem>::dir_towards(const Elem_p a, float x, float y) const {
+template <>
+float Control<Dot>::dir_towards(const Dot::Dot_p a, float x, float y) const {
 	float ratio = (y - a->get_y()) / (x - a->get_x());
 	float ang = atan(ratio) * 180.0 / M_PI;
 	return (a->get_x() <= x) ? ang : (ang + 180);
