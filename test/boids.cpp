@@ -118,7 +118,7 @@ int main()
     Renderer<Dot> twodee = Renderer<Dot>(800, 800, 200);
 
     // Run Simulation for 5000 steps with renderer
-    sim->Run(500, twodee);
+    sim->Run(0, twodee);
 
     delete sim;
     return 0;
