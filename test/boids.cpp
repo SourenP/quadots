@@ -115,10 +115,10 @@ int main()
         sim->CreateElement(Dot(random_f(0,800), random_f(0,800), random_f(0,360), 1, b));
 
     // Initialize Renderer
-    Renderer<Dot> twodee = Renderer<Dot>(800, 800, 200);
+    //Renderer<Dot> twodee = Renderer<Dot>(800, 800, 50);
 
     // Run Simulation infinitely with renderer
-    sim->Run(0, twodee);
+    sim->Run(2, false);
 
     delete sim;
     return 0;

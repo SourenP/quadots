@@ -12,8 +12,8 @@ float random_f(int min, int max) {
 }
 
 /*
- Sets bounds on point
- */
+    Loop dots to other side if they go out of bounds
+*/
 void bounds(Dot::Dot_p p, Control<Dot>& c) {
     if(p->get_x() <= 0)
         p->set_x(799);
@@ -26,8 +26,8 @@ void bounds(Dot::Dot_p p, Control<Dot>& c) {
 }
 
 /*
- Simulation behavior
- */
+    Change angle on collision
+*/
 void collision(Dot::Dot_p p, Control<Dot>& c) {
     vector<Dot::Dot_p> neighbors = c.qneighbors(p, 5);
     if (neighbors.size()) {

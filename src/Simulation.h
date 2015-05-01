@@ -27,8 +27,8 @@ public:
 
     void CreateElement(elem e);
     int CreateBehavior(behavior &b);
-    void Run(int gen_count, bool print);
-    void Run(int gen_count, Renderer<elem> &renderer);
+    vector<Elem_p> Run(int gen_count, bool print);
+    vector<Elem_p> Run(int gen_count, Renderer<elem> &renderer);
 
 private:
     Control<elem> *control;
@@ -72,7 +72,7 @@ Simulation<elem>::~Simulation()
     Updates state and if print is true, print the state.
 */
 template <class elem>
-void Simulation<elem>::Run(int gen_count, bool print) {
+vector<shared_ptr<elem>> Simulation<elem>::Run(int gen_count, bool print) {
     if (gen_count == 0)
         while (true) {
             UpdateState();
@@ -83,6 +83,7 @@ void Simulation<elem>::Run(int gen_count, bool print) {
             UpdateState();
             if (print) cout << *curr_state << endl;
         }
+    return curr_state->get_elements();
 }
 
 /*
@@ -90,21 +91,22 @@ void Simulation<elem>::Run(int gen_count, bool print) {
     Updates state and renders it using renderer passed in.
 */
 template <class elem>
-void Simulation<elem>::Run(int gen_count, Renderer<elem> &renderer) {
+vector<shared_ptr<elem>> Simulation<elem>::Run(int gen_count, Renderer<elem> &renderer) {
     bool quit = false;
     // Update and draw
     if (gen_count == 0)
         while (true) {
             UpdateState();
             quit = renderer.RenderState(*curr_state);
-            if (quit) return;
+            if (quit) return curr_state->get_elements();;
         }
     else
         for(int i=0; i < gen_count; i++) {
             UpdateState();
             quit = renderer.RenderState(*curr_state);
-            if (quit) return;
+            if (quit) return curr_state->get_elements();;
         }
+    return curr_state->get_elements();;
 }
 
 /*

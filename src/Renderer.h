@@ -14,7 +14,7 @@ template <class elem>
 class Renderer
 {
 public:
-	Renderer(int screen_w, int screen_h, float sps);
+	Renderer(int screen_w, int screen_h, float sps) throw (int);
 	~Renderer();
 
 	bool RenderState(State<elem> &s);
@@ -40,7 +40,7 @@ private:
     Creates the SDL screen and renderer and initializes variables.
 */
 template <class elem>
-Renderer<elem>::Renderer(int screen_w, int screen_h, float sps)
+Renderer<elem>::Renderer(int screen_w, int screen_h, float sps) throw (int)
 {
     // Create SDL Window
     SCREEN_WIDTH = screen_w;
@@ -52,13 +52,20 @@ Renderer<elem>::Renderer(int screen_w, int screen_h, float sps)
 
     // Check if window initialized.
     if (window == nullptr) {
-        logSDLError(cout, "CreateWindow");
+        logSDLError(cerr, "CreateWindow");
         SDL_Quit();
     }
 
     // Initialize variables.
-    SPS = sps;
-    quit = false;
+    if(sps <= 0) {
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        throw 0;
+    } else {
+        SPS = sps;
+        quit = false;
+    }
 }
 
 /*
@@ -111,7 +118,7 @@ bool Renderer<elem>::RenderState(State<elem> &s) {
 
     // Cleanup
     SDL_RenderPresent(renderer);
-    SDL_Delay(1000/SPS); // crashes if negative sps
+    SDL_Delay(1000/SPS);
 
     return false;
 }
