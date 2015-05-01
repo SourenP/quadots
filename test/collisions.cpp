@@ -4,12 +4,10 @@
 #include <cmath>
 using namespace std;
 
-int collision_count = 0;
-
 /*
  Returns a random float in the range [min, max)
  */
-float random_pos(int min, int max) {
+float random_f(int min, int max) {
     return(float) (rand() % max + min);
 }
 
@@ -30,37 +28,40 @@ void bounds(Dot::Dot_p p, Control<Dot>& c) {
 /*
  Simulation behavior
  */
-void collision_detection(Dot::Dot_p p, Control<Dot>& c) {
-    vector<Dot::Dot_p> neighbors = c.qneighbors(p, 10);
-    /* Reverse direction of colliding points by 180 degrees */
-    for (auto i : neighbors)
-        i->set_ang(i->get_ang() + 180);
+void collision(Dot::Dot_p p, Control<Dot>& c) {
+    vector<Dot::Dot_p> neighbors = c.qneighbors(p, 5);
+    if (neighbors.size()) {
+        p->add_ang(-2*(360-(90-p->get_ang())));
+    }
 }
 
 int main()
 {
-    // Brains
-    Simulation<Dot>::rule r4 = &bounds;
-    Simulation<Dot>::rule r1 = &collision_detection;
-    Simulation<Dot>::behavior cd = {r1, r4};
-
     // Initialize Simulation
-    Simulation<Dot> *s = new Simulation<Dot>(800, 800);
+    Simulation<Dot> *sim = new Simulation<Dot>(800, 800);
 
-    // Create behavior circle
-    int b1 = s->CreateBehavior(cd);
+    // Define rules of collisions
+    Simulation<Dot>::rule r1 = &collision;
+    Simulation<Dot>::rule r2 = &bounds;
 
-    // Create random Points
-    for(int i=0; i < 200; i++)
-        s->CreateElement(Dot(random_pos(0,800), random_pos(0,800),random_pos(0,360), 1, b1));
+    // Put all rules into a behavior
+    Simulation<Dot>::behavior col = {r1, r2};
+
+    // Create behavior col
+    int b = sim->CreateBehavior(col);
+
+    // Create 200 Dots in random position, random directions, velocity 1, behavior index b (col)
+    int count = 200;
+    for(int i=0; i < count; i++)
+        sim->CreateElement(Dot(random_f(0,800), random_f(0,800), random_f(0,360), 1, b));
     
     // Initialize Renderer
     Renderer<Dot> twodee = Renderer<Dot>(800, 800, 100);
 
-    // Run Simulation for 200 steps
-    s->Run(1000, twodee);
+    // Run Simulation infinitely with renderer
+    sim->Run(0, twodee);
     
-    delete s;
+    delete sim;
     return 0;
 }
 
